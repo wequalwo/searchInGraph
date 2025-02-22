@@ -21,7 +21,7 @@ struct Node;
 
 using PNode = SharedPtr<Node>;
 
-
+// 
 struct Node
 {
 	Node(int id, List<PNode> nodes) : data(id), incident(nodes)
