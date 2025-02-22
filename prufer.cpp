@@ -93,13 +93,15 @@ void write_dot_file(const List<std::pair<int, int>>& edges, const std::string& f
 
 // Функция преобразования индекса в пару (a, b)
 std::pair<int, int> pair_from_index(int index, int n) {
-    int a = 1;
-    while (index >= (n - a)) {
-        index -= (n - a);
-        a++;
-    }
-    int b = a + 1 + index;
-    return {a, b};
+    // Решаем квадратное уравнение a^2 - a - 2 * index = 0
+    int a = (std::sqrt(1 + 8 * index) - 1) / 2;
+    
+    // Вычисляем оставшийся индекс
+    int index_in_row = index - (a * (a + 1) / 2);
+    
+    int b = a + 1 + index_in_row;
+    
+    return {a + 1, b}; // +1, т.к. индексация с 1
 }
 
 // Функция генерации новых пар
