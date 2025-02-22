@@ -78,7 +78,7 @@ List<PNode> get_tree(unsigned int size)
 int main()
 {
 	Set<PNode> visited; // Множество посещенных узлов
-	int N = 100; // Количество вершин
+	int N = 1000; // Количество вершин
 	List<PNode> nodes = get_tree(N);
 	
 	return 0;

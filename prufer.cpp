@@ -6,6 +6,8 @@
 #include <chrono>
 #include <fstream>
 #include <unordered_set>
+#include <queue>
+#include <functional>
 
 template <class T>
 using List = std::vector<T>;
@@ -29,50 +31,44 @@ List<int> prufer_gen(int n) {
     return prufer_sequence;
 }
 
-// Функция для восстановления дерева из последовательности Пруфера
+// Функция для восстановления дерева из последовательности Прюфера
+// Оптимизированная реализация
 List<std::pair<int, int>> prufer_unpack(const List<int>& prufer_sequence, int n) {
     List<std::pair<int, int>> edges;
 
-    // Множество неиспользуемых номеров вершин
-    std::set<int> unused_vertices;
+    // Массив для отслеживания количества появлений каждой вершины в последовательности Прюфера
+    std::vector<int> degree(n + 1, 1);  // Начальная степень для всех вершин = 1, т.к. все вершины присутствуют
+    for (int v : prufer_sequence) {
+        degree[v]++;
+    }
+
+    // Очередь с приоритетом (min-heap) для хранения минимальных вершин
+    std::priority_queue<int, std::vector<int>, std::greater<int>> min_heap;
     for (int i = 1; i <= n; ++i) {
-        unused_vertices.insert(i);
+        if (degree[i] == 1) {  // Вершина только один раз встречается
+            min_heap.push(i);
+        }
     }
 
     // Восстанавливаем дерево
     for (int i = 0; i < n - 2; ++i) {
-        // Ищем минимальную неиспользуемую вершину, которая не встречается в остатке последовательности Прюфера
-        int v = -1;
-        for (auto it = unused_vertices.begin(); it != unused_vertices.end(); ++it) {
-            bool is_unused = true;
-            // Проверяем, встречается ли вершина в оставшихся элементах последовательности Пруфера
-            for (int j = i; j < prufer_sequence.size(); ++j) {
-                if (prufer_sequence[j] == *it) {
-                    is_unused = false;
-                    break;
-                }
-            }
-            // TODO: здесь можно оптимизировать поиск минимума
+        // Извлекаем минимальную вершину
+        int v = min_heap.top();
+        min_heap.pop();
 
-            // Если не встречается, выбираем её как минимальную
-            if (is_unused) {
-                v = *it;
-                break;
-            }
-        }
-
-        // Добавляем ребро (v, A[i])
+        // Добавляем ребро
         edges.push_back({v, prufer_sequence[i]});
 
-        // Удаляем вершину v из множества неиспользуемых вершин
-        unused_vertices.erase(v);
+        // Уменьшаем степень вершины, которая была использована
+        if (--degree[prufer_sequence[i]] == 1) {
+            min_heap.push(prufer_sequence[i]);
+        }
     }
 
     // Добавляем последнее ребро между оставшимися двумя вершинами
-    auto it = unused_vertices.begin();
-    int v1 = *it;
-    ++it;
-    int v2 = *it;
+    int v1 = min_heap.top();
+    min_heap.pop();
+    int v2 = min_heap.top();
     edges.push_back({v1, v2});
 
     return edges;
@@ -146,42 +142,34 @@ List<std::pair<int, int>> generate_new_pairs(int n, const List<std::pair<int, in
 }
 
 
-int main() {
-    int n = 10;  // Количество вершин
-    List<int> prufer_sequence = prufer_gen(n);  // Генерация последовательности Пруфера
-
-    std::cout << "Generated Prufer sequence with n = " << n << ": ";
-    for (int num : prufer_sequence) {
-        std::cout << num << " ";
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
+        return 1;
     }
-    std::cout << std::endl;
 
+    int n = std::atoi(argv[1]);  // Получаем значение N из аргументов командной строки
+
+    List<int> prufer_sequence = prufer_gen(n);  // Генерация последовательности Пруфера
+    std::cout << "Generated Prufer sequence with n = " << n << std::endl;
+    if (n < 20)
+    {
+        for (int num : prufer_sequence) {
+            std::cout << num << " ";
+        }
+        std::cout << std::endl;
+    }
+ 
     // Восстановление дерева из последовательности Пруфера
     List<std::pair<int, int>> edges = prufer_unpack(prufer_sequence, n);
-
-    std::cout << "Tree edges: " << std::endl;
-    for (const auto& edge : edges) {
-        std::cout << edge.first << " - " << edge.second << std::endl;
-    }
+    std::cout << "Tree has generaded" << std::endl;
     write_dot_file(edges, "tree.dot");
-
-
-    std::cout << "Tree edges: " << std::endl;
-    for (const auto& edge : edges) {
-        std::cout << edge.first << " - " << edge.second << std::endl;
-    }
 
     // Генерация новых пар (добавление новых рёбер)
     List<std::pair<int, int>> all_pairs = edges;  // Все существующие пары
     List<std::pair<int, int>> new_pairs = generate_new_pairs(n, edges);
     all_pairs.insert(all_pairs.end(), new_pairs.begin(), new_pairs.end());
-
-    std::cout << "All pairs (existing + new): " << std::endl;
-    for (const auto& pair : all_pairs) {
-        std::cout << pair.first << " - " << pair.second << std::endl;
-    }
-
-    // Запись графа в файл
-    write_dot_file(all_pairs, "tree_with_new_edges.dot");
+    std::cout << "Graph has generaded" << std::endl;
+    write_dot_file(all_pairs, "graph.dot");
     return 0;
 }
