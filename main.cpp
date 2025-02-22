@@ -55,10 +55,10 @@ List<int> traverse(const List<PNode>& nodes)
 List<PNode> get_tree(unsigned int size)
 {
 	if (size == 0)
-		return {}; // Если размер = 0, возвращаем пустой список
+		return {};
 
 	std::random_device dev;
-	std::mt19937 rng(dev()); // Инициализация генератора случайных чисел
+	std::mt19937 rng(dev()); 
 
 	List<PNode> nodes;
 	nodes.reserve(size); // Резервируем память под узлы
@@ -78,8 +78,8 @@ List<PNode> get_tree(unsigned int size)
 int main()
 {
 	Set<PNode> visited; // Множество посещенных узлов
-	int N = 100; // Количество узлов
-	List<PNode> nodes = get_tree(N); // Генерируем дерево из 100 узлов
+	int N = 100; // Количество вершин
+	List<PNode> nodes = get_tree(N);
 	
-	return 0; // Завершаем выполнение программы
+	return 0;
 }
