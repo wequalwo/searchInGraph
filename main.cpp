@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include <memory>
 #include "randomizer/rand.h"
 #include "graph/node.h"
 #include "graph/tree.h"

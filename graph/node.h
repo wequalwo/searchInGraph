@@ -20,10 +20,10 @@ using PNode = SharedPtr<Node>;
 struct Node
 {
 	// Конструктор принимает ID узла и список инцидентных узлов
-	Node(int id, List<PNode> nodes) : data(id), incident(nodes)
+	Node(SizeType id, List<PNode> nodes) : data(id), incident(nodes)
 		{ }
 
-	int data;               // Значение узла
+    SizeType data;               // Значение узла
 	List<PNode> incident;   // Список соседних узлов (смежность)
 };
 

@@ -7,7 +7,7 @@
 #include "randomizer/rand.h"
 
 // Функция для генерации случайного дерева
-List<PNode> get_tree(unsigned int size)
+List<PNode> get_tree(SizeType size)
 {
 	if (size == 0)
 		return {};
@@ -18,9 +18,9 @@ List<PNode> get_tree(unsigned int size)
 	nodes.push_back(std::make_shared<Node>(0, List<PNode>{})); // Корневой узел
 
 	// Создание дерева
-	for (unsigned int i = 1; i < size; ++i)
+	for (SizeType i = 1; i < size; ++i)
 	{
-		unsigned int ancestorNode = rand.uRand(0, i - 1); // Выбираем случайного предка
+		SizeType ancestorNode = rand.uRand(0, i - 1); // Выбираем случайного предка
 		nodes.push_back(std::make_shared<Node>(i, List<PNode>{nodes[ancestorNode]})); // "подвешиваем" к предку
 		nodes[ancestorNode]->incident.push_back(nodes.back()); // Добавляем связь от предка
 	}

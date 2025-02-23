@@ -3,6 +3,7 @@
 #define COMMON_H
 
 #include <vector>
+#include <set>
 #include <unordered_set>
 #include <unordered_map>
 
@@ -19,5 +20,7 @@ using Map = std::unordered_map<T, V>;
 
 template <class T>
 using List = std::vector<T>;
+
+using SizeType = unsigned long long;
 
 #endif //COMMON_H

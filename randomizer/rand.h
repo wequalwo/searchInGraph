@@ -16,7 +16,7 @@ class Randomizer
         return dist(rng);
     }
 
-    unsigned int uRand(unsigned int min, unsigned int max) 
+    SizeType uRand(SizeType min, SizeType max)
     {
         std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
         return dist(rng);
