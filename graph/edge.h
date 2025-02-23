@@ -9,9 +9,11 @@
 #include "graph/node.h"
 #include "randomizer/rand.h"
 
-
+// псевдоним для пары индексов
 using EdgeType = std::pair<SizeType, SizeType>;
 
+// отображение пары индексов вершин в номер ребра
+// ребра a,b и b,a совпадают, поэтому рассматриваем упорядоченные пары
 SizeType edgeToInd(SizeType treeSize, SizeType firstInd, SizeType secondInd)
 {
     return treeSize*std::min(firstInd, secondInd) + std::max(firstInd, secondInd);
@@ -22,21 +24,24 @@ SizeType edgeToInd(SizeType treeSize, const EdgeType& edgeInd)
     return edgeToInd(treeSize, edgeInd.first, edgeInd.second);
 }
 
+// отображение номер ребра в пару индексов вершин
 EdgeType indToEdge(SizeType treeSize, SizeType edgeInd)
 {
     return std::make_pair(edgeInd / treeSize, edgeInd % treeSize);
 }
 
+// заполняем множество номеров ребер, которые уже присутствуют в дереве
 Set<SizeType> getTreeEdges(const List<PNode>& tree)
 {
     Set<SizeType> edgesInds;
     edgesInds.reserve(tree.size() - 1);
-    for (const auto& elem : tree)
-        for (const auto& inc : elem->incident)
-            edgesInds.insert(edgeToInd(tree.size(), elem->data, inc->data));
+    for (const auto& elem : tree) //< для каждой вершины
+        for (const auto& inc : elem->incident) //< идем по списку смежности
+            edgesInds.insert(edgeToInd(tree.size(), elem->data, inc->data)); //< и запоминаем номера ребер
     return edgesInds;
 }
 
+// добавляем ребро из первой вершины во вторую и обратно
 void insertEdge(List<PNode>& graph, const EdgeType& edgeInd)
 {
     auto first = graph[edgeInd.first];
@@ -46,6 +51,7 @@ void insertEdge(List<PNode>& graph, const EdgeType& edgeInd)
     second->incident.push_back(first);
 }
 
+// исключаем уже существующие ребра и петли 
 bool checkEdgeInsertable(const List<PNode>& graph, const EdgeType& edgeInd)
 {
     if (edgeInd.first == edgeInd.second)
@@ -53,10 +59,13 @@ bool checkEdgeInsertable(const List<PNode>& graph, const EdgeType& edgeInd)
     
     const auto second = graph.at(edgeInd.second);
     const auto& firstIncident = graph.at(edgeInd.first)->incident;
-    // if elem is present, std::find != std::end, so we can not insert it and vice versa
+    // if elem is absent, std::find == std::end, so we can insert it and vice versa
     return std::find(firstIncident.begin(), firstIncident.end(), second) == std::end(firstIncident);
 }
 
+// генерация списка случайных ребер
+// берем 2 случайных перестановки чисел от 0 до treeSize - 1
+// пары чисел с одинаковым индексом — добавляемые ребра
 List<EdgeType> randEdgesList(SizeType treeSize)
 {
     List<SizeType> x(treeSize), y(treeSize);
@@ -88,7 +97,7 @@ void addEdgesToTree(List<PNode>& tree, SizeType edgesToAdd)
         auto newEdges = randEdgesList(tree.size());
         for (auto& newEdge : newEdges)
         {
-            if (checkEdgeInsertable(tree, newEdge))
+            if (checkEdgeInsertable(tree, newEdge)) // пропускаем петли и уже существующие ребра
             {
                 insertEdge(tree, newEdge);
                 if (--edgesToAdd == 0)
@@ -103,7 +112,7 @@ void setGraphDensity(List<PNode>& tree, double density)
 {
     SizeType curEdges = tree.size() - 1;
     SizeType maxEdges = tree.size()*(tree.size() - 1)/2;
-    SizeType needEdges = std::round(maxEdges * density) - curEdges;
+    SizeType needEdges = std::round(maxEdges * density) - curEdges; // считаем, сколько ребер добавить
     addEdgesToTree(tree, needEdges);
 }
 
