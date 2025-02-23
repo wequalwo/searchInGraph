@@ -1,0 +1,23 @@
+#pragma once
+#ifndef COMMON_H
+#define COMMON_H
+
+#include <vector>
+#include <unordered_set>
+#include <unordered_map>
+
+// Определяем удобные псевдонимы с помощью using
+template <class T>
+using Set = std::unordered_set<T>;
+
+template <class T>
+using OrdSet = std::set<T>;
+
+// Хеш-таблица (ассоциативный массив)
+template <class T, class V>
+using Map = std::unordered_map<T, V>;
+
+template <class T>
+using List = std::vector<T>;
+
+#endif //COMMON_H
