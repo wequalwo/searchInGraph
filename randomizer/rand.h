@@ -3,6 +3,9 @@
 #define RAND_H
 
 #include <random>
+#include <algorithm>
+
+#include "common/common.h"
 
 class Randomizer
 {
@@ -21,6 +24,11 @@ class Randomizer
         std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
         return dist(rng);
     }
+
+    template<class T>
+    void shuffle(List<T>& target)
+        { std::shuffle(target.begin(), target.end(), rng); }
+
     private:
 	std::mt19937 rng; 
 };
