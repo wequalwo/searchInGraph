@@ -160,30 +160,14 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
         return 1;
     }
-
     int n = std::atoi(argv[1]);  // Получаем значение N из аргументов командной строки
-
     List<int> prufer_sequence = prufer_gen(n);  // Генерация последовательности Пруфера
-    printf("Generated Prufer sequence with n = %d\n", n);
-    if (n < 20)
-    {
-        for (int num : prufer_sequence) {
-            printf("%d ", num);
-        }
-        printf("\n");
-    }
-
     // Восстановление дерева из последовательности Пруфера
     List<std::pair<int, int>> edges = prufer_unpack(prufer_sequence, n);
-    printf("Tree has generaded\n");
-    write_dot_file(edges, "tree.dot");
-
     // Генерация новых пар (добавление новых рёбер)
     List<std::pair<int, int>> all_pairs = edges;  // Все существующие пары
     List<std::pair<int, int>> new_pairs = generate_new_pairs(n, edges);
     all_pairs.insert(all_pairs.end(), new_pairs.begin(), new_pairs.end());
-    printf("Graph has generaded\n");
-    write_dot_file(all_pairs, "graph.dot");
 
     return 0;
 }
