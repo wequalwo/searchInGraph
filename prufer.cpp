@@ -90,20 +90,28 @@ void write_dot_file(const List<std::pair<int, int>>& edges, const std::string& f
     }
 }
 
-
+/**
+ * Любую пару (a, b) можно преобразовать в индекс по формуле:
+ * index = (a - 1) * (2 * n - a) / 2 + (b - a - 1)
+ * где (a - 1)*(2n - 1)/2 = (n - 1) + (n - 2) + ...  + (n - a + 1)
+ * -- количество пар, у которых первый элемент меньше a
+ * (b - a - 1) -- порядковый номер элемента b в строке, начинающейся с a
+ * 
+ * Обратное преобразование получается путем решения уравнений
+ * (a - 1)*(2n - 1)/2  < index
+ * b = a + 1 + (index - (a * (a + 1) / 2))
+ */
 // Функция преобразования индекса в пару (a, b)
 std::pair<int, int> pair_from_index(int index, int n) {
     // Решаем квадратное уравнение a^2 - a - 2 * index = 0
-    int a = (std::sqrt(1 + 8 * index) - 1) / 2;
-    
+    int a = (2*n + 1 - std::sqrt((2*n + 1)*(2*n + 1) - 4*(2*index + 2*n)))/2;
     // Вычисляем оставшийся индекс
-    int index_in_row = index - (a * (a + 1) / 2);
+    int index_in_row = index - (a - 1)*(2*n - 1)/2;
     
     int b = a + 1 + index_in_row;
     
-    return {a + 1, b}; // +1, т.к. индексация с 1
+    return {a, b};
 }
-
 // Функция генерации новых пар
 List<std::pair<int, int>> generate_new_pairs(int n, const List<std::pair<int, int>>& existing_pairs) {
     int T = n * (n - 1) / 2;  // Всего возможных пар
