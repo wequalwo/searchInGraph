@@ -136,13 +136,13 @@
          for (const auto& edge : edges)
          {
              file << "    " << edge.first << " -- " << edge.second << ";\n";
-             std::cout << "    " << edge.first << " -- " << edge.second << ";\n";
+             //std::cout << "    " << edge.first << " -- " << edge.second << ";\n";
          }
          file << "}\n";
          file.close();
          file.flush();
      }
-     std::cout << "Graph written to " << filename << std::endl;
+     //std::cout << "Graph written to " << filename << std::endl;
      file.flush();
      return;
  }
@@ -192,7 +192,7 @@
    * 2.1
    **/
   std::vector<std::pair<SizeType, SizeType>> generate_new_pairs(
-    int n, const std::vector<std::pair<SizeType, SizeType>>& existing_pairs)
+    int n, const std::vector<std::pair<SizeType, SizeType>>& existing_pairs, double density)
 {
     SizeType T = n * (n - 1) / 2; // Общее количество возможных пар
 
@@ -205,49 +205,62 @@
     // Определяем l — сколько новых пар нужно добавить
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dist(0, T - existing_pairs.size());
-    SizeType l = dist(gen);
-    //SizeType l = T / 10;
+
+    if (density > 1 || density < 0)
+        throw std::invalid_argument("Некорректная плотность");
+
+    int l = int(double(T) * density);
+    if (l == 0)
+    {
+        std::uniform_int_distribution<int> dist(0, T - existing_pairs.size());
+        l = dist(gen);
+    }
+
     std::cout << "Number of new pairs to generate: l = " << l << std::endl;
+    std::cout << "With density = " << double(l + n - 1)/double(T) << std::endl;
     if (l == 0) return existing_pairs;
 
-    // Генерация последовательности случайных индексов
-    std::vector<SizeType> all_indices(T);
-    std::iota(all_indices.begin(), all_indices.end(), 0);
-    
-    std::shuffle(all_indices.begin(), all_indices.end(), gen);
+    // Генерация списка доступных индексов (не входящих в existing_pairs)
+    std::vector<SizeType> available_indices;
+    available_indices.reserve(T - existing_pairs.size());
 
-    std::vector<SizeType> new_pairs;
-    new_pairs.reserve(l);
-    for (SizeType idx : all_indices) {
-        if (existing_set.find(idx) == existing_set.end()) {
-            new_pairs.push_back(idx);
-            if (new_pairs.size() == l) break;
+    for (SizeType i = 0; i < T; i++) {
+        if (existing_set.find(i) == existing_set.end()) {
+            available_indices.push_back(i);
         }
     }
+    std::cout << "l to generate l = " << l << std::endl;
+    // Выбор l случайных индексов с помощью std::sample
+    std::vector<SizeType> new_pairs;
+    new_pairs.reserve(l);
+    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(new_pairs), l, gen);
 
     // Формируем итоговый список пар
-    std::vector<std::pair<SizeType, SizeType>> grapth_pairs;
-    grapth_pairs.reserve(existing_pairs.size() + l);
+    std::vector<std::pair<SizeType, SizeType>> graph_pairs;
+    graph_pairs.reserve(existing_pairs.size() + l);
 
     for (SizeType idx : new_pairs) {
-        grapth_pairs.push_back(pair_from_index(idx, n));
+        graph_pairs.push_back(pair_from_index(idx, n));
     }
-    grapth_pairs.insert(grapth_pairs.end(), existing_pairs.begin(), existing_pairs.end());
+    graph_pairs.insert(graph_pairs.end(), existing_pairs.begin(), existing_pairs.end());
 
-    return grapth_pairs;
+    return graph_pairs;
 }
 
 
  int main(int argc, char* argv[])
  {
-     if (argc != 2) {
+     if (argc != 3) {
          std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
          return 1;
      }
      int n = std::atoi(argv[1]);  // Получаем значение N из аргументов командной строки
+     double density = std::atoi(argv[2]);  // Получаем значение плотности из аргументов командной строки
+
      List<int> prufer_sequence = prufer_gen(n);
      List<std::pair<SizeType, SizeType>> edges = prufer_unpack(prufer_sequence, n);
-     List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges);
+     List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges, density);
+     //write_dot_file(new_pairs, "graph.dot");
+
      return 0;
  }
