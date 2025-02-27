@@ -229,7 +229,7 @@
             available_indices.push_back(i);
         }
     }
-
+    std::cout << "l to generate l = " << l << std::endl;
     // Выбор l случайных индексов с помощью std::sample
     std::vector<SizeType> new_pairs;
     new_pairs.reserve(l);
