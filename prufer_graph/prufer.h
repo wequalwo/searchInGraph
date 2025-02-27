@@ -1,7 +1,15 @@
 #pragma once
 #include "randomizer/rand.h"
 
-// Функция для генерации последовательности Прюфера
+
+/**
+ * Функция для генерации последовательности Прюфера
+ * @param n Количество вершин в дереве
+ * @return Вектор, содержащий последовательность Прюфера
+ * @complexity O(n)
+ * @time O(n)
+ * @space O(n)
+ */
 List<int> prufer_gen(int n)
 {
     List<int> prufer_sequence(n - 2);
@@ -19,6 +27,25 @@ List<int> prufer_gen(int n)
     return prufer_sequence;
 }
 
+
+/**
+ * @brief Генерирует последовательность из n уникальных чисел от 1 до diap
+ * 
+ * @details
+ *      Генерирует последовательность из n уникальных чисел от 1 до diap
+ *      по следующему алгоритму:
+ *      1. Генерируется упорядоченный список
+ *      2. Генератором случайных чисел список перемешивается
+ *      3. Берутся первые n элементов
+ * 
+ * @param[in] n Количество запрошенных уникальных чисел
+ * @param[in] diap Диапазон, из которого берутся числа
+ * @return std::vector<SizeType> - последовательность из n уникальных чисел
+ * @complexity O(n)
+ * @time O(n)
+ * @space O(n)
+ * @throw std::invalid_argument - если n > diap
+ */
 std::vector<SizeType> seq_gen(int n, SizeType diap)
 {
     if (n > diap)

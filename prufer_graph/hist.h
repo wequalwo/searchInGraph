@@ -2,8 +2,8 @@
 #include "common/common.h"
 #include "common/service.h"
 
-///////////////////////////////////////////////
-//построение гистограммы
+
+
 // Функция для анализа распределения степеней вершин
 std::vector<SizeType> calculate_deg(int n, const std::vector<std::pair<SizeType, SizeType>> &pairs)
 {
@@ -16,6 +16,17 @@ std::vector<SizeType> calculate_deg(int n, const std::vector<std::pair<SizeType,
     return deg;
 }
 
+
+/**
+ * Функция для генерации выборки степеней вершин
+ * @param n Количество вершин в графе
+ * @param existing_pairs Список пар, уже существующих в графе (остовном дереве)
+ * @param density Плотность графа (от 0 до 1)
+ * @return Вектор, содержащий степени всех вершин
+ * @complexity O(n + l)
+ * @time O(n + l)
+ * @space O(n + l)
+ */
 std::vector<SizeType> generate_degree_sample(
     int n, const std::vector<std::pair<SizeType, SizeType>> &existing_pairs, double density)
 {
@@ -84,6 +95,7 @@ std::vector<SizeType> generate_degree_sample(
     return deg;
 }
 
+// получение гистограммы по массиву степеней
 std::vector<int> get_hist(int n, const std::vector<SizeType> &deg, std::vector<int> &hist)
 {
 
@@ -93,4 +105,3 @@ std::vector<int> get_hist(int n, const std::vector<SizeType> &deg, std::vector<i
     }
     return hist;
 }
-///////////////////////////////////////////////////////////////////////////
