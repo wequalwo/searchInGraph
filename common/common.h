@@ -6,6 +6,12 @@
 #include <set>
 #include <unordered_set>
 #include <unordered_map>
+#include <algorithm>
+#include <random>
+#include <chrono>
+#include <fstream>
+#include <queue>
+#include <functional>
 
 // Определяем удобные псевдонимы с помощью using
 template <class T>
