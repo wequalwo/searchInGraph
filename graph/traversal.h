@@ -37,7 +37,11 @@ public:
 
     // Позволяет установить расстояние между вершинами для обхода в ширину.
     // Для этого переходим в предыдущую вершину, пока не окажемся в первой. 
-    SizeType getDist();
+    List<SizeType> Traverser::getPath();
+
+    SizeType getFirst();
+
+    SizeType getLast();
 
     // очистка всех СД для запуска нового обхода
     void clear();
@@ -101,17 +105,27 @@ const List<SizeType>& Traverser::getTraverseOrder()
     return m_visitOrder;
 }
 
-// Метод getDist
-SizeType Traverser::getDist()
+SizeType Traverser::getFirst()
+{
+    return *m_visitOrder.begin();
+}
+
+SizeType Traverser::getLast()
+{
+    return m_visitOrder.back();
+}
+
+// Метод getPath
+List<SizeType> Traverser::getPath()
 {
     SizeType cur = m_visitOrder.back();
-    SizeType dist = 0;
+    List<SizeType> path{cur};
     while (m_prev.count(cur))
     {
         cur = m_prev[cur];
-        ++dist;
+        path.push_back(cur);
     }
-    return dist;
+    return path;
 }
 
 // Метод clear
