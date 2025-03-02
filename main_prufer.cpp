@@ -3,7 +3,7 @@
  * Метрики:
  * 1k вершин: 0.037
  * 10k вершин: 2.16
- * 100k вершин: 24.31
+ * 100k вершин: 25
  */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
 #include "prufer_graph/hist.h"
+#include "graph/traversal.h"
 
 /**
  * @brief Главная функция, запускающая алгоритм
@@ -45,9 +46,20 @@ int main(int argc, char *argv[])
     // основной алгоритм построения дерева
     List<int> prufer_sequence = prufer_gen(n);
     List<std::pair<SizeType, SizeType>> edges = prufer_unpack(prufer_sequence, n);
-    List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges, density);
-    write_dot_file(new_pairs, "graph.dot");
+    //List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges, density);
+    generate_new_pairs(n, edges, density);
+    //write_dot_file(new_pairs, "graph.dot");
+    //List<Node> nodes = setGraphDensity2(n, edges, density);
 
+    /*
+    for (const auto &node : nodes) {
+        std::cout << "Node " << node.data + 1 << ": ";
+        for (SizeType neighbor : node.incident) {
+            std::cout << neighbor << " ";
+        }
+        std::cout << "\n";
+    }
+    */
     // построение гистограммы
     /*std::vector<int> hist(n);
 
@@ -59,5 +71,28 @@ int main(int argc, char *argv[])
     }
     write_vector_to_file(hist, "histogram.bin");
     */
+
+    List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
+
+    /*
+    for (const auto &node : graph) {
+        std::cout << "Node " << node.data + 1 << ": ";
+        for (SizeType neighbor : node.incident) {
+            std::cout << neighbor << " ";
+        }
+        std::cout << "\n";
+    }
+    */
+
+    std::cout << "Try path find\n";
+
+    Traverser traverser(&graph);
+	traverser.traverseRand<std::queue<SizeType>>();
+	std::cout << traverser.getDist();
+
+	traverser.clear();
+	traverser.traverseRand<std::stack<SizeType>>();
+	std::cout << traverser.getDist();
+
     return 0;
 }

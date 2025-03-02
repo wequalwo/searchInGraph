@@ -14,17 +14,15 @@
 // псевдоним для пары индексов
 using EdgeType = std::pair<SizeType, SizeType>;
 
-namespace std
-{
+namespace std { 
     template<>
-    struct std::hash<EdgeType>
-    {
-        inline size_t operator()(const EdgeType& e) const {
-            std::hash<SizeType> hasher;
-            return hasher(e.first) ^ hasher(e.second);
+    struct hash<EdgeType> {
+        size_t operator()(const EdgeType &edge) const {
+            return std::hash<SizeType>()(edge.first) ^ (std::hash<SizeType>()(edge.second) << 1);
         }
     };
 }
+
 
 // Заполняем множество номеров ребер, которые уже присутствуют в дереве
 // Потом это может быть использовано для больших плотностей, чтобы не исключить нужное ребро
@@ -41,11 +39,10 @@ Set<EdgeType> getTreeEdges(const List<Node>& tree)
 // добавляем ребро из первой вершины во вторую и обратно
 void insertEdge(List<Node>& graph, SizeType firstInd, SizeType secondInd)
 {
-    auto& first = graph[firstInd];
-    auto& second = graph[secondInd];
-
-    first.incident.insert(secondInd);
-    second.incident.insert(firstInd);
+        auto& first = graph[firstInd];
+        auto& second = graph[secondInd];
+        first.incident.insert(secondInd);
+        second.incident.insert(firstInd);
 }
 
 // исключаем уже существующие ребра и петли
