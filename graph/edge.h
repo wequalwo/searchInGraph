@@ -32,7 +32,8 @@ EdgeType indToEdge(SizeType treeSize, SizeType edgeInd)
     return std::make_pair(edgeInd / treeSize, edgeInd % treeSize);
 }
 
-// заполняем множество номеров ребер, которые уже присутствуют в дереве
+// Заполняем множество номеров ребер, которые уже присутствуют в дереве. Не используется.
+// Можно попробовать применить при генерации — вероятно, получится быстрее, если проверять не ребро, а наличие числа в Set.
 Set<SizeType> getTreeEdges(const List<Node>& tree)
 {
     Set<SizeType> edgesInds;

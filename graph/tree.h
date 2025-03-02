@@ -6,7 +6,7 @@
 #include "graph/node.h"
 #include "randomizer/rand.h"
 
-// Функция для генерации случайного дерева
+// Функция для генерации рекурсивного случайного дерева
 List<Node> get_tree(SizeType size)
 {
 	if (size == 0)
