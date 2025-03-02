@@ -12,6 +12,7 @@
 #include <fstream>
 #include <queue>
 #include <functional>
+#include <utility>
 
 // Определяем удобные псевдонимы с помощью using
 template <class T>
@@ -28,5 +29,17 @@ template <class T>
 using List = std::vector<T>;
 
 using SizeType = unsigned long long;
+
+// псевдоним для пары индексов
+using EdgeType = std::pair<SizeType, SizeType>;
+
+namespace std {
+    template<>
+    struct hash<EdgeType> {
+        size_t operator()(const EdgeType &edge) const {
+            return std::hash<SizeType>()(edge.first) ^ (std::hash<SizeType>()(edge.second) << 1);
+        }
+    };
+}
 
 #endif //COMMON_H

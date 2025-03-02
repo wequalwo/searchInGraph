@@ -3,6 +3,8 @@
 #include "common/service.h"
 #include "graph/node.h"
 #include "graph/edge.h"
+#include <algorithm>
+
 /**
  * Любую пару (a, b) можно преобразовать в индекс по формуле:
  * index = (a - 1) * (2 * n - a) / 2 + (b - a - 1)
@@ -92,6 +94,56 @@ std::vector<std::pair<SizeType, SizeType>> generate_new_pairs(
               << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 << " sec" << '\n';
 
     return graph_pairs;
+}
+
+// Модификация без отображения ребер в числа. Работа выполняется сразу над парами чисел.
+// Также исключены некоторые промежуточные копирования.
+// Предполагается, что небольшие изменения в используемых типах позволят ускорить работу без увеличения расхода памяти.
+void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double density)
+{
+    using Clock = std::chrono::steady_clock;
+
+    std::cerr << "starting edges generating\n";
+    Clock::time_point begin = Clock::now();
+
+    SizeType T = n * (n - 1) / 2; // Общее количество возможных пар
+
+    // Используем Set для быстрого поиска
+    Set<EdgeType> existing_set(existing_pairs.begin(), existing_pairs.end());
+
+    // Определяем l — сколько новых пар нужно добавить
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    if (density > 1 || density < 0)
+        throw std::invalid_argument("Некорректная плотность");
+
+    int l = int(double(T) * density);
+    if (l == 0)
+    {
+        std::uniform_int_distribution<int> dist(0, T - existing_pairs.size());
+        l = dist(gen);
+    }
+
+    // Генерация списка доступных индексов (не входящих в existing_pairs)
+    List<EdgeType> available_indices;
+    available_indices.reserve(T - existing_pairs.size());
+
+    for (SizeType i = 0; i < T - 1; i++)
+        for (SizeType j = i + 1; j < T; ++j) // <- генерируем упорядоченные пары с пропуском петель
+        {
+            auto pair = std::make_pair(i, j);
+            if (existing_set.count(pair) == 0)
+                available_indices.push_back(std::move(pair));
+        }
+    // std::cout << "l to generate l = " << l << std::endl;
+    // Выбор l случайных индексов с помощью std::sample
+    // вставляем сразу в existing_pairs
+    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(existing_pairs), l, gen);
+
+    Clock::time_point end = Clock::now();
+    std::cerr << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[mcs] = "
+              << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 << " sec" << '\n';
 }
 
 
