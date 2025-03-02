@@ -78,9 +78,9 @@ std::vector<SizeType> seq_gen(int n, SizeType diap)
  * @space O(n)
  * Версия с сортировкой вершин
  */
-std::vector<std::pair<SizeType, SizeType>> prufer_unpack(const std::vector<int> &prufer_sequence, int n)
+List<EdgeType> prufer_unpack(const std::vector<int> &prufer_sequence, int n)
 {
-    std::vector<std::pair<SizeType, SizeType>> edges;
+    List<EdgeType> edges;
 
     // Массив для отслеживания количества появлений каждой вершины в последовательности Прюфера
     std::vector<SizeType> degree(n + 1, 1); // Все вершины изначально имеют степень 1
@@ -108,7 +108,7 @@ std::vector<std::pair<SizeType, SizeType>> prufer_unpack(const std::vector<int> 
         SizeType u = prufer_sequence.at(i);
 
         // Добавляем ребро, гарантируя порядок (меньшее число первым)
-        edges.emplace_back(std::min(u, v), std::max(u, v));
+        edges.emplace_back(EdgeType{std::min(u, v), std::max(u, v)});
 
         // Уменьшаем степень вершины
         if (--degree.at(u) == 1)
@@ -122,7 +122,7 @@ std::vector<std::pair<SizeType, SizeType>> prufer_unpack(const std::vector<int> 
     min_heap.pop();
     SizeType v2 = min_heap.top();
 
-    edges.emplace_back(std::min(v1, v2), std::max(v1, v2));
+    edges.emplace_back(EdgeType{std::min(v1, v2), std::max(v1, v2)});
 
     return edges;
 }

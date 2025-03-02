@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
 
     // основной алгоритм построения дерева
     List<int> prufer_sequence = prufer_gen(n);
-    List<std::pair<SizeType, SizeType>> edges = prufer_unpack(prufer_sequence, n);
+    List<EdgeType> edges = prufer_unpack(prufer_sequence, n);
     //List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges, density);
-    generate_new_pairs(n, edges, density);
+    generate_new_pairs_unpacked(n, edges, density);
     //write_dot_file(new_pairs, "graph.dot");
     //List<Node> nodes = setGraphDensity2(n, edges, density);
 

@@ -18,7 +18,7 @@ Set<EdgeType> getTreeEdges(const List<Node>& tree)
     edgesInds.reserve(tree.size() - 1);
     for (const auto& elem : tree) //< для каждой вершины
         for (const auto& inc : elem.incident) //< идем по списку смежности
-            edgesInds.insert(std::make_pair(elem.data, tree[inc].data)); //< и запоминаем номера ребер
+            edgesInds.insert(EdgeType{elem.data, tree[inc].data}); //< и запоминаем номера ребер
     return edgesInds;
 }
 

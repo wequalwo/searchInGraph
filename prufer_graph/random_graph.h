@@ -106,7 +106,7 @@ void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double d
     std::cerr << "starting edges generating\n";
     Clock::time_point begin = Clock::now();
 
-    SizeType T = n * (n - 1) / 2; // Общее количество возможных пар
+    int T = n * (n - 1) / 2; // Общее количество возможных пар
 
     // Используем Set для быстрого поиска
     Set<EdgeType> existing_set(existing_pairs.begin(), existing_pairs.end());
@@ -129,10 +129,10 @@ void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double d
     List<EdgeType> available_indices;
     available_indices.reserve(T - existing_pairs.size());
 
-    for (SizeType i = 0; i < T - 1; i++)
-        for (SizeType j = i + 1; j < T; ++j) // <- генерируем упорядоченные пары с пропуском петель
+    for (SizeType i = 0; i < n - 1; i++)
+        for (SizeType j = i + 1; j < n; ++j) // <- генерируем упорядоченные пары с пропуском петель
         {
-            auto pair = std::make_pair(i, j);
+            EdgeType pair{i, j};
             if (existing_set.count(pair) == 0)
                 available_indices.push_back(std::move(pair));
         }
@@ -240,7 +240,7 @@ List<Node> setGraphDensity2(
  * @time O(n + m)
  * @space O(n + m)
  */
-List<Node> transform(std::vector<std::pair<SizeType, SizeType>> edges, int n)
+List<Node> transform(List<EdgeType> edges, int n)
 {
     using Clock = std::chrono::steady_clock;
     Clock::time_point begin = Clock::now();

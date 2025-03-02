@@ -28,16 +28,27 @@ using Map = std::unordered_map<T, V>;
 template <class T>
 using List = std::vector<T>;
 
-using SizeType = unsigned long long;
+using SizeType = uint16_t;
 
-// псевдоним для пары индексов
-using EdgeType = std::pair<SizeType, SizeType>;
+// ребро кодируем как пару индексов
+struct EdgeType
+{
+    SizeType first;
+    SizeType second;
+};
 
 namespace std {
     template<>
     struct hash<EdgeType> {
         size_t operator()(const EdgeType &edge) const {
             return std::hash<SizeType>()(edge.first) ^ (std::hash<SizeType>()(edge.second) << 1);
+        }
+    };
+
+    template<>
+    struct equal_to<EdgeType> {
+        bool operator()(const EdgeType &first, const EdgeType &second) const {
+            return first.first == second.first && first.second == second.second;
         }
     };
 }
