@@ -123,6 +123,10 @@ List<EdgeType> prufer_unpack(const std::vector<int> &prufer_sequence, int n)
     SizeType v2 = min_heap.top();
 
     edges.emplace_back(EdgeType{std::min(v1, v2), std::max(v1, v2)});
-
+    for (auto& edge : edges)
+    {
+        --edge.first;
+        --edge.second;
+    }
     return edges;
 }

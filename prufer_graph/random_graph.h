@@ -259,7 +259,7 @@ List<Node> transform(List<EdgeType> edges, int n)
     for (auto edge : edges)
     {
         // Регулируем показатель так, чтобы он начинался с нуля
-        insertEdge(nodes, edge.first - 1, edge.second - 1);
+        insertEdge(nodes, edge.first, edge.second);
     }
 
     Clock::time_point end = Clock::now();
