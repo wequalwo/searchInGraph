@@ -42,7 +42,7 @@ bool checkEdgeInsertable(const List<Node>& graph, SizeType first, SizeType secon
 }
 
 // генерируем пары случайных чисел и переводим их в ребра 
-void addEdgesToTreeByOne(List<Node>& tree, SizeType edgesToAdd)
+void addEdgesToTreeByOne(List<Node>& tree, unsigned int edgesToAdd)
 {
     Randomizer rand;
     while (edgesToAdd > 0)
@@ -62,8 +62,8 @@ void addEdgesToTreeByOne(List<Node>& tree, SizeType edgesToAdd)
 void setGraphDensity(List<Node>& tree, double density)
 {
     SizeType curEdges = tree.size() - 1;
-    SizeType maxEdges = tree.size()*(tree.size() - 1)/2;
-    SizeType needEdges = std::round(maxEdges * density) - curEdges; // считаем, сколько ребер добавить
+    unsigned int maxEdges = tree.size()*(tree.size() - 1)/2;
+    unsigned int needEdges = std::round(maxEdges * density) - curEdges; // считаем, сколько ребер добавить
 
     using Clock = std::chrono::steady_clock;
 
