@@ -37,7 +37,7 @@ public:
 
     // Позволяет установить расстояние между вершинами для обхода в ширину.
     // Для этого переходим в предыдущую вершину, пока не окажемся в первой. 
-    List<SizeType> Traverser::getPath();
+    List<SizeType> getPath();
 
     SizeType getFirst();
 

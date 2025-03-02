@@ -73,26 +73,42 @@ int main(int argc, char *argv[])
     */
 
     List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
-
-    /*
-    for (const auto &node : graph) {
-        std::cout << "Node " << node.data + 1 << ": ";
-        for (SizeType neighbor : node.incident) {
-            std::cout << neighbor << " ";
-        }
-        std::cout << "\n";
-    }
-    */
+    
 
     std::cout << "Try path find\n";
 
     Traverser traverser(&graph);
 	traverser.traverseRand<std::queue<SizeType>>();
-	std::cout << traverser.getDist();
+	traverser.getPath();
+    SizeType first = traverser.getFirst();
+    SizeType last = traverser.getLast();
+    std::cout << "\nfirst = " << first << ", last = " << last << "\n";
+    List<SizeType> path = traverser.getPath();
+    for (auto id : path)
+    {
+        std::cout << id << " ";
+    }
+    std::cout << "\n"; 
 
 	traverser.clear();
 	traverser.traverseRand<std::stack<SizeType>>();
-	std::cout << traverser.getDist();
-
+	traverser.getPath();
+    first = traverser.getFirst();
+    last = traverser.getLast();
+    std::cout << "first = " << first << ", last = " << last << "\n";
+    path = traverser.getPath();
+    for (auto id : path)
+    {
+        std::cout << id << " ";
+    }
+    std::cout << "\n"; 
+        
+    for (const auto &node : graph) {
+        std::cout << "Node " << node.data << ": ";
+        for (SizeType neighbor : node.incident) {
+            std::cout << neighbor << " ";
+        }
+        std::cout << "\n";
+    }
     return 0;
 }

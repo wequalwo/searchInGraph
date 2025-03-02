@@ -17,11 +17,11 @@ int main()
 
 	Traverser traverser(&nodes);
 	traverser.traverseRand<std::queue<SizeType>>();
-	std::cout << traverser.getDist();
+	//std::cout << traverser.getDist();
 
 	traverser.clear();
 	traverser.traverseRand<std::stack<SizeType>>();
-	std::cout << traverser.getDist();
+	//std::cout << traverser.getDist();
 
 	return 0;
 }
