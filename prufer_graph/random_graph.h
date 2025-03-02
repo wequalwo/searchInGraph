@@ -61,6 +61,7 @@ std::vector<std::pair<SizeType, SizeType>> generate_new_pairs(
     //std::cout << "With density = " << double(l + n - 1) / double(T) << std::endl;
     if (l == 0)
         return existing_pairs;
+    std::cout << "l = " << l << std::endl;
 
     // Генерация списка доступных индексов (не входящих в existing_pairs)
     std::vector<SizeType> available_indices;
@@ -77,7 +78,7 @@ std::vector<std::pair<SizeType, SizeType>> generate_new_pairs(
     // Выбор l случайных индексов с помощью std::sample
     std::vector<SizeType> new_pairs;
     new_pairs.reserve(l);
-    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(new_pairs), l, gen);
+    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(new_pairs), l, gen); 
 
     // Формируем итоговый список пар
     std::vector<std::pair<SizeType, SizeType>> graph_pairs;
