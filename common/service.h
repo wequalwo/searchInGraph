@@ -87,7 +87,7 @@ double sq(SizeType N)
  * @return пара (a, b)
  * @throw std::runtime_error при ошибке out of range
  */
-std::pair<SizeType, SizeType> pair_from_index(SizeType index, SizeType n)
+EdgeType pair_from_index(SizeType index, SizeType n)
 {
     // Решаем квадратное уравнение a^2 - a - 2 * index = 0
     // Берем ближайшее целое слева
@@ -97,7 +97,7 @@ std::pair<SizeType, SizeType> pair_from_index(SizeType index, SizeType n)
     SizeType b = index + a + 1 - (a - 1) * (2 * n - a) / 2;
     if (a >= b || a < 0 || b < 0)
     {
-        // std::cout << a << " " << b << std::endl;
+        //std::cout << a << " " << b << std::endl;
         throw std::runtime_error("validation error");
     }
     return {a, b};

@@ -70,12 +70,12 @@ void setGraphDensity(List<Node>& tree, double density)
 
     using Clock = std::chrono::steady_clock;
 
-    std::cerr << "starting edges generating\n";
+    //std::cerr << "starting edges generating\n";
     Clock::time_point begin = Clock::now();
     addEdgesToTreeByOne(tree, needEdges);
     Clock::time_point end = Clock::now();
-    std::cerr << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[mcs] = "
-              << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 << " sec" << '\n';
+    //std::cerr << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[mcs] = "
+    //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 << " sec" << '\n';
 }
 
 #endif //EDGE_H

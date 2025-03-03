@@ -5,7 +5,7 @@
 #include "graph/tree.h"
 #include "graph/edge.h"
 #include "graph/traversal.h"
-
+#include <common/service.h>
 
 
 int main(int argc, char *argv[])
@@ -49,7 +49,8 @@ int main(int argc, char *argv[])
         std::cout << id << " ";
     }
     std::cout << "\n"; 
-        
+    std::cout << "Process has been completed\n";
+	/*
     for (const auto &node : nodes) {
         std::cout << "Node " << node.data << ": ";
         for (SizeType neighbor : node.incident) {
@@ -57,7 +58,23 @@ int main(int argc, char *argv[])
         }
         std::cout << "\n";
     }
+	*/
 	//std::cout << traverser.getDist();
+
+    // #######################################
+    // Построение гистограммы степеней вершин
+    int trials = 1000;
+    std::vector<int> hist(n, 0); 
+    for (int i = 0; i < trials; i++)
+    {
+        nodes = get_tree(n);
+	    setGraphDensity(nodes, density);
+        for (auto &node : nodes)
+        {
+            ++hist.at(node.incident.size());
+        }
+    }
+    write_vector_to_file(hist, "histogram.bin");
 
 	return 0;
 }
