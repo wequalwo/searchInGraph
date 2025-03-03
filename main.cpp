@@ -8,19 +8,55 @@
 
 
 
-int main()
+int main(int argc, char *argv[])
 {
-	int N = 10'000; // Количество вершин
-	List<Node> nodes = get_tree(N);
+	if (argc != 3)
+    {
+        std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
+        return 1;
+    }
 
-	setGraphDensity(nodes, 0.1);
+    int n = std::atoi(argv[1]);          // Получаем значение N из аргументов командной строки
+    double density = std::atof(argv[2]); // Получаем значение плотности из аргументов командной строки
+	List<Node> nodes = get_tree(n);
 
-	Traverser traverser(&nodes);
+	setGraphDensity(nodes, density);
+
+	std::cout << "Try path find\n";
+
+    Traverser traverser(&nodes);
 	traverser.traverseRand<std::queue<SizeType>>();
-	//std::cout << traverser.getDist();
+	traverser.getPath();
+    SizeType first = traverser.getFirst();
+    SizeType last = traverser.getLast();
+    std::cout << "\nfirst = " << first << ", last = " << last << "\n";
+    List<SizeType> path = traverser.getPath();
+    for (auto id : path)
+    {
+        std::cout << id << " ";
+    }
+    std::cout << "\n"; 
 
 	traverser.clear();
 	traverser.traverseRand<std::stack<SizeType>>();
+	traverser.getPath();
+    first = traverser.getFirst();
+    last = traverser.getLast();
+    std::cout << "first = " << first << ", last = " << last << "\n";
+    path = traverser.getPath();
+    for (auto id : path)
+    {
+        std::cout << id << " ";
+    }
+    std::cout << "\n"; 
+        
+    for (const auto &node : nodes) {
+        std::cout << "Node " << node.data << ": ";
+        for (SizeType neighbor : node.incident) {
+            std::cout << neighbor << " ";
+        }
+        std::cout << "\n";
+    }
 	//std::cout << traverser.getDist();
 
 	return 0;

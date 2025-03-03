@@ -63,7 +63,10 @@ void setGraphDensity(List<Node>& tree, double density)
 {
     SizeType curEdges = tree.size() - 1;
     unsigned int maxEdges = tree.size()*(tree.size() - 1)/2;
-    unsigned int needEdges = std::round(maxEdges * density) - curEdges; // считаем, сколько ребер добавить
+    unsigned int needMinEdges = std::round(maxEdges * density);
+    if (curEdges >= needMinEdges)
+        return;
+    unsigned int needEdges = needMinEdges - curEdges; // считаем, сколько ребер добавить
 
     using Clock = std::chrono::steady_clock;
 

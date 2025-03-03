@@ -67,22 +67,26 @@ void Traverser::traverse(SizeType from, SizeType to)
     StorageType toVisit;
     toVisit.push(from);
     SizeType cur = from;
+    // Запоминаем, что зашли в вершину, и помещаем ее в историю
+    m_visited.insert(cur);
+    m_visitOrder.push_back(cur);
     
     while (cur != to)
     {
         // У stack и queue разные методы, поэтому завернули в шаблон
         cur = extractElem(toVisit);
-        const auto& curNode = m_pNodes->at(cur);
         // Запоминаем, что зашли в вершину, и помещаем ее в историю
         m_visited.insert(cur);
         m_visitOrder.push_back(cur);
-
+        const auto& curNode = m_pNodes->at(cur);
         for (auto elem : curNode.incident)
             if (!m_visited.count(elem)) //< все вершины, которые еще не посещали
             {
                 toVisit.push(elem); //< помещаем в СД обхода
+                m_visited.insert(elem); //< отмечаем, что посетили
                 m_prev[elem] = cur; //< и запоминаем, откуда в них пришли
             }
+        
     }
 }
 
