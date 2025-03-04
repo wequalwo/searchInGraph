@@ -41,39 +41,15 @@ int main(int argc, char *argv[])
         return 1;
     }
     int n = std::atoi(argv[1]);          // Получаем значение N из аргументов командной строки
-    double density = std::atoi(argv[2]); // Получаем значение плотности из аргументов командной строки
+    double density = std::atof(argv[2]); // Получаем значение плотности из аргументов командной строки
 
     // основной алгоритм построения дерева
     List<int> prufer_sequence = prufer_gen(n);
     List<EdgeType> edges = prufer_unpack(prufer_sequence, n);
-    //List<std::pair<SizeType, SizeType>> new_pairs = generate_new_pairs(n, edges, density);
     generate_new_pairs_unpacked(n, edges, density);
-    //write_dot_file(new_pairs, "graph.dot");
-    //List<Node> nodes = setGraphDensity2(n, edges, density);
 
-    /*
-    for (const auto &node : nodes) {
-        std::cout << "Node " << node.data + 1 << ": ";
-        for (SizeType neighbor : node.incident) {
-            std::cout << neighbor << " ";
-        }
-        std::cout << "\n";
-    }
-    */
-    // построение гистограммы
-    /*std::vector<int> hist(n);
-
-    for (int i = 0; i < 10000; i++)
-    {
-        List<int> prufer_sequence = prufer_gen(n);
-        List<std::pair<SizeType, SizeType>> edges = prufer_unpack(prufer_sequence, n);
-        get_hist(n, generate_degree_sample(n, edges, density), hist); // получаем гистограмму степеней
-    }
-    write_vector_to_file(hist, "histogram.bin");
-    */
 
     List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
-    
 
     std::cout << "Try path find\n";
 
@@ -88,7 +64,7 @@ int main(int argc, char *argv[])
     {
         std::cout << id << " ";
     }
-    std::cout << "\n"; 
+    std::cout << "\n";
 
 	traverser.clear();
 	traverser.traverseRand<std::stack<SizeType>>();
@@ -102,13 +78,33 @@ int main(int argc, char *argv[])
         std::cout << id << " ";
     }
     std::cout << "\n"; 
-        
-    for (const auto &node : graph) {
-        std::cout << "Node " << node.data << ": ";
-        for (SizeType neighbor : node.incident) {
-            std::cout << neighbor << " ";
+    
+
+    int trials = 1000;
+    std::vector<int> hist(n, 0); 
+    for (int i = 0; i < trials; i++)
+    {
+        prufer_sequence = prufer_gen(n);
+        edges = prufer_unpack(prufer_sequence, n);
+        generate_new_pairs_unpacked(n, edges, density);
+        graph = transform(edges, n);
+        for (auto &edges : graph)
+        {
+            ++hist.at(edges.incident.size());
         }
-        std::cout << "\n";
+    }
+    write_vector_to_file(hist, "histogram.bin");
+
+
+    if (n <= 100)
+    {
+        for (const auto &node : graph) {
+            std::cout << "Node " << node.data << ": ";
+            for (SizeType neighbor : node.incident) {
+                std::cout << neighbor << " ";
+            }
+            std::cout << "\n";
+        }
     }
     return 0;
 }
