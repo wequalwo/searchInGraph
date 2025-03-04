@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     std::cout << "\n"; 
     
 
-    int trials = 5000;
+    int trials = 1000;
     std::vector<int> hist(n, 0); 
     for (int i = 0; i < trials; i++)
     {
