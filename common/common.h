@@ -14,6 +14,7 @@
 #include <functional>
 #include <utility>
 
+#define MIN_INVERSE_DENSITY 0.5
 // Определяем удобные псевдонимы с помощью using
 template <class T>
 using Set = std::unordered_set<T>;

@@ -59,8 +59,35 @@ void addEdgesToTreeByOne(List<Node>& tree, unsigned int edgesToAdd)
     }
 }
 
+void inverseGraph(List<Node>& tree, double density)
+{
+    auto edges = getTreeEdges(tree);
+    for (auto& elem : tree)
+        elem.incident.clear();
+
+    unsigned int maxEdges = tree.size() * (tree.size() - 1)/2;
+    unsigned int edgesToRemove = std::round(maxEdges * (1-density));
+    Randomizer rand;
+    while (edgesToRemove > 0)
+    {
+        SizeType firstInd = rand.uRand(0, tree.size() - 1);
+        SizeType secondInd = rand.uRand(0, tree.size() - 1);
+        if (edges.count({firstInd, secondInd}) == 0) // удаляем ребра, которых изначально не было
+            if (checkEdgeInsertable(tree, firstInd, secondInd)) // пропускаем петли и уже удаленные ребра
+            {
+                insertEdge(tree, firstInd, secondInd);
+                if (--edgesToRemove == 0)
+                    return;
+            }
+    }
+}
 void setGraphDensity(List<Node>& tree, double density)
 {
+    if (density >= MIN_INVERSE_DENSITY)
+    {
+        inverseGraph(tree, density);
+        return;
+    }
     SizeType curEdges = tree.size() - 1;
     unsigned int maxEdges = tree.size()*(tree.size() - 1)/2;
     unsigned int needMinEdges = std::round(maxEdges * density);

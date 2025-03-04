@@ -24,13 +24,23 @@ public:
     template <class StorageType>
     void traverse(SizeType from, SizeType to);
 
+        /**
+     * Функция для обхода инвертированного графа между двумя заданными вершинами
+     * 
+     * @tparam StorageType тип стека или очереди, используемый для хранения порядка обхода
+     * @param from начальная вершина
+     * @param to конечная вершина
+     */
+    template <class StorageType>
+    void traverseInv(SizeType from, SizeType to);
+
     /**
      * Генерирует случайный путь между двумя случайными вершинами
      * 
      * @tparam StorageType тип стека или очереди, используемый для хранения порядка обхода
      */
     template <class StorageType>
-    void traverseRand();
+    void traverseRand(bool inverse);
 
     // Позволяет восстановить начало и конец маршрута: первая вершина — откуда начали, последняя вершина — куда пришли.
     const List<SizeType>& getTraverseOrder();
@@ -90,9 +100,40 @@ void Traverser::traverse(SizeType from, SizeType to)
     }
 }
 
+template <class StorageType>
+void Traverser::traverseInv(SizeType from, SizeType to)
+{
+    // СД для хранения порядка обхода
+    StorageType toVisit;
+    toVisit.push(from);
+    SizeType cur = from;
+    // Запоминаем, что зашли в вершину, и помещаем ее в историю
+    m_visited.insert(cur);
+    m_visitOrder.push_back(cur);
+    
+    while (cur != to)
+    {
+        // У stack и queue разные методы, поэтому завернули в шаблон
+        cur = extractElem(toVisit);
+        // Запоминаем, что зашли в вершину, и помещаем ее в историю
+        m_visited.insert(cur);
+        m_visitOrder.push_back(cur);
+        const auto& curNode = m_pNodes->at(cur);
+        for (SizeType i = 0; i < m_pNodes->size(); ++i)
+        if (curNode.incident.count(i) == 0) //< если ребро не удалено
+            if (!m_visited.count(i)) //< все вершины, которые еще не посещали
+            {
+                toVisit.push(i); //< помещаем в СД обхода
+                m_visited.insert(i); //< отмечаем, что посетили
+                m_prev[i] = cur; //< и запоминаем, откуда в них пришли
+            }
+        
+    }
+}
+
 // Шаблонный метод traverseRand
 template <class StorageType>
-void Traverser::traverseRand()
+void Traverser::traverseRand(bool inverse)
 {
     Randomizer rand;
     SizeType from = rand.uRand(0, m_pNodes->size() - 1);
@@ -100,7 +141,7 @@ void Traverser::traverseRand()
     while (from == to)
         to = rand.uRand(0, m_pNodes->size() - 1);
     
-    return traverse<StorageType>(from, to);
+    return inverse ? traverseInv<StorageType>(from, to) : traverse<StorageType>(from, to);
 }
 
 // Метод getTraverseOrder
