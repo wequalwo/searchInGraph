@@ -1,9 +1,13 @@
 #pragma once
+#ifndef RANDOM_GRAPH_H
+#define RANDOM_GRAPH_H
+
+#include <algorithm>
+
 #include "common/common.h"
 #include "common/service.h"
 #include "graph/node.h"
 #include "graph/edge.h"
-#include <algorithm>
 
 /**
  * Любую пару (a, b) можно преобразовать в индекс по формуле:
@@ -188,3 +192,6 @@ List<Node> transform(const List<EdgeType>& edges, int n)
 
     return nodes;
 }
+
+#
+#endif // RANDOM_GRAPH_H
