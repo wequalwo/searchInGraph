@@ -121,11 +121,17 @@ void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double d
         throw std::invalid_argument("Некорректная плотность");
 
     int l = int(double(T) * density);
+
     if (l == 0)
     {
         std::uniform_int_distribution<int> dist(0, T - existing_pairs.size());
         l = dist(gen);
     }
+
+    if (l - n <= 0)
+        return;
+    
+    l = l - n;
 
     // Генерация списка доступных индексов (не входящих в existing_pairs)
     List<EdgeType> available_indices;

@@ -40,7 +40,7 @@ public:
      * @tparam StorageType тип стека или очереди, используемый для хранения порядка обхода
      */
     template <class StorageType>
-    void traverseRand(bool inverse);
+    void traverseRand(bool inverse = false);
 
     // Позволяет восстановить начало и конец маршрута: первая вершина — откуда начали, последняя вершина — куда пришли.
     const List<SizeType>& getTraverseOrder();
@@ -133,7 +133,7 @@ void Traverser::traverseInv(SizeType from, SizeType to)
 
 // Шаблонный метод traverseRand
 template <class StorageType>
-void Traverser::traverseRand(bool inverse)
+void Traverser::traverseRand(bool inverse = false)
 {
     Randomizer rand;
     SizeType from = rand.uRand(0, m_pNodes->size() - 1);
