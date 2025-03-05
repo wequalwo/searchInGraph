@@ -1,4 +1,5 @@
 #pragma once
+
 #include "common.h"
 #include "graph/node.h"
 #include "graph/tree.h"
@@ -6,7 +7,6 @@
 
 class MonteCarlo {
 public:
-    // Конструктор с инициализацией вектора плотностей
     MonteCarlo(const std::vector<double>& densities, int numEdges, int numGraphs, int numSearches);
 
     // Очищение графов и результатов
@@ -26,16 +26,16 @@ private:
     // Метод для выполнения поиска пути на графе
     void searchPath(int graphIndex);
 
-    // Вспомогательная функция для логирования результатов
+    // логирование результатов
     void logResults(int graphIndex, int searchIndex);
 
-    // Приватные члены
     std::vector<double> m_densities;      // Вектор плотностей
     int m_numEdges;                       // Количество рёбер в графе
     int m_numGraphs;                      // Количество графов для генерации
     int m_numSearches;                    // Количество поисков на каждом графе
 
-    List<Node> m_graph;                   // Граф (хранилище для вершин)
+    List<Node> m_graph;                   // Граф
     std::vector<int> m_bfsResults;        // Результаты поиска в ширину
     std::vector<int> m_dfsResults;        // Результаты поиска в глубину
+    // TODO: добавить доп. данные методов
 };

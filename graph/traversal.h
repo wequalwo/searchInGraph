@@ -4,6 +4,7 @@
 
 #include <stack>
 #include <queue>
+
 #include "graph/node.h"
 #include "randomizer/rand.h"
 

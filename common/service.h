@@ -1,4 +1,9 @@
 #pragma once
+#ifndef SERVICE_H
+#define SERVICE_H
+
+#include <fstream>
+
 #include "common.h"
 
 /**
@@ -102,3 +107,6 @@ EdgeType pair_from_index(SizeType index, SizeType n)
     }
     return {a, b};
 }
+
+
+#endif //SERVICE_H

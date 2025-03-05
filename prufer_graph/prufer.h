@@ -1,4 +1,7 @@
 #pragma once
+#ifndef PRUFER_H
+#define PRUFER_H
+
 #include "randomizer/rand.h"
 
 
@@ -130,3 +133,5 @@ List<EdgeType> prufer_unpack(const std::vector<int> &prufer_sequence, int n)
     }
     return edges;
 }
+
+#endif // PRUFER_H

@@ -5,7 +5,7 @@
 #include "graph/tree.h"
 #include "graph/edge.h"
 #include "graph/traversal.h"
-#include <common/service.h>
+#include "common/service.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef HIST_H
+#define HIST_H
+
 #include "common/common.h"
 #include "common/service.h"
 
@@ -105,3 +108,5 @@ std::vector<int> get_hist(int n, const std::vector<SizeType> &deg, std::vector<i
     }
     return hist;
 }
+
+#endif // HIST_H

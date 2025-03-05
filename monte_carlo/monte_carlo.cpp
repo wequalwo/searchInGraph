@@ -1,7 +1,6 @@
 #include "monte_carlo.h"
 #include "graph/edge.h"
 
-// Конструктор
 MonteCarlo::MonteCarlo(const std::vector<double>& densities, int numEdges, int numGraphs, int numSearches)
     : m_densities(densities), m_numEdges(numEdges), m_numGraphs(numGraphs), m_numSearches(numSearches) {}
 
@@ -24,7 +23,7 @@ void MonteCarlo::initialize() {
     for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) {
         // Выбираем плотность для текущего графа
         double currentDensity = m_densities[graphIndex % m_densities.size()];
-        
+        // TODO разделить методы: надо получать не только эти данные
         m_graph = buildGraph(m_numEdges, currentDensity);
         
         for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
@@ -37,8 +36,9 @@ void MonteCarlo::initialize() {
     }
 }
 
-// Строим граф на основе плотности
 List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
+
+    // TODO : переделать на вызов наиболее оптимального метода
     List<Node> nodes = get_tree(numEdges);
     
     setGraphDensity(nodes, density);
@@ -48,10 +48,9 @@ List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
 
 // Поиск пути на графе (в текущем графе)
 void MonteCarlo::searchPath(int graphIndex) {
-    // Пример поиска на графе (можно настроить на BFS или DFS)
+
     Traverser traverser(&m_graph);
     
-    // Применяем поиск в ширину (или глубину в зависимости от требований)
     traverser.traverseRand<std::queue<SizeType>>(true);  // BFS
     m_bfsResults.push_back(traverser.getTraverseOrder().size());
 
@@ -62,5 +61,5 @@ void MonteCarlo::searchPath(int graphIndex) {
 
 // Логирование результатов
 void MonteCarlo::logResults(int graphIndex, int searchIndex) {
-    // TODO
+    // TODO правильное логирование с ипользование геттеров
 }

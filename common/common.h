@@ -3,24 +3,13 @@
 #define COMMON_H
 
 #include <vector>
-#include <set>
 #include <unordered_set>
 #include <unordered_map>
-#include <algorithm>
-#include <random>
-#include <chrono>
-#include <fstream>
-#include <queue>
-#include <functional>
-#include <utility>
 
 #define MIN_INVERSE_DENSITY 0.5
 // Определяем удобные псевдонимы с помощью using
 template <class T>
 using Set = std::unordered_set<T>;
-
-template <class T>
-using OrdSet = std::set<T>;
 
 // Хеш-таблица (ассоциативный массив)
 template <class T, class V>
