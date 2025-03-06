@@ -1,20 +1,22 @@
 #pragma once
+#ifndef MONTE_CARLO_H
+#define MONTE_CARLO_H
 
-#include "common.h"
-#include "graph/node.h"
+#include "common/common.h"
 #include "graph/tree.h"
 #include "graph/traversal.h"
+#include "logger/logger.h"
 
 class MonteCarlo {
 public:
-    MonteCarlo(const std::vector<double>& densities, int numEdges, int numGraphs, int numSearches);
+    MonteCarlo(const List<double>& densities, int numVertices, int numGraphs, int numSearches, Logger& log);
 
     // Очищение графов и результатов
     void clear();
 
     // Геттеры для результатов
-    const std::vector<int>& getBFSResults() const;
-    const std::vector<int>& getDFSResults() const;
+    const List<int>& getBFSResults() const;
+    const List<int>& getDFSResults() const;
 
     // Инициализация алгоритма, запускает метод
     void initialize();
@@ -24,18 +26,23 @@ private:
     List<Node> buildGraph(int numEdges, double density);
 
     // Метод для выполнения поиска пути на графе
-    void searchPath(int graphIndex);
+    void searchPath(double curDensity);
 
     // логирование результатов
-    void logResults(int graphIndex, int searchIndex);
+    void logResults(int graphIndex, double density, int searchIndex);
 
-    std::vector<double> m_densities;      // Вектор плотностей
-    int m_numEdges;                       // Количество рёбер в графе
+    List<double> m_densities;      // Вектор плотностей
+    int m_numVertices;                    // Количество вершин в графе
     int m_numGraphs;                      // Количество графов для генерации
     int m_numSearches;                    // Количество поисков на каждом графе
 
     List<Node> m_graph;                   // Граф
-    std::vector<int> m_bfsResults;        // Результаты поиска в ширину
-    std::vector<int> m_dfsResults;        // Результаты поиска в глубину
+    List<int> m_bfsResults;        // Результаты поиска в ширину
+    List<int> m_dfsResults;        // Результаты поиска в глубину
+    SizeType m_dist;               // Геодезическое расстояние 
     // TODO: добавить доп. данные методов
+
+    Logger& m_logger;
 };
+
+#endif // MONTE_CARLO_H
