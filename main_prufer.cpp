@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     std::cout << "Try path find\n";
 
     Traverser traverser(&graph);
-	traverser.traverseRand<std::queue<SizeType>>(density >= MIN_INVERSE_DENSITY);
+	traverser.traverseRand<std::queue<SizeType>>(density);
 	traverser.getPath();
     SizeType first = traverser.getFirst();
     SizeType last = traverser.getLast();
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     std::cout << "\n";
 
 	traverser.clear();
-	traverser.traverseRand<std::stack<SizeType>>(density >= MIN_INVERSE_DENSITY);
+	traverser.traverseRand<std::stack<SizeType>>(density);
 	traverser.getPath();
     first = traverser.getFirst();
     last = traverser.getLast();

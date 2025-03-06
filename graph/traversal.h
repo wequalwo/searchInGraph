@@ -25,6 +25,17 @@ public:
     template <class StorageType>
     void traverse(SizeType from, SizeType to);
 
+    /**
+     * Функция для обхода графа с заданной плотностью
+     * 
+     * @tparam StorageType тип стека или очереди, используемый для хранения порядка обхода
+     * @param from начальная вершина
+     * @param to конечная вершина
+     * @param density плотность графа: в случае большой плотности будет выбран инвертированный обход
+     */
+    template <class StorageType>
+    void traverse(SizeType from, SizeType to, double density);
+
         /**
      * Функция для обхода инвертированного графа между двумя заданными вершинами
      * 
@@ -41,7 +52,7 @@ public:
      * @tparam StorageType тип стека или очереди, используемый для хранения порядка обхода
      */
     template <class StorageType>
-    void traverseRand(bool inverse = false);
+    void traverseRand(double density);
 
     // Позволяет восстановить начало и конец маршрута: первая вершина — откуда начали, последняя вершина — куда пришли.
     const List<SizeType>& getTraverseOrder();
@@ -132,9 +143,19 @@ void Traverser::traverseInv(SizeType from, SizeType to)
     }
 }
 
+// Шаблонный метод traverse
+template <class StorageType>
+void Traverser::traverse(SizeType from, SizeType to, double density)
+{
+    if (density >= MIN_INVERSE_DENSITY)
+        traverseInv<StorageType>(from, to);
+    else
+        traverse<StorageType>(from, to);
+}
+
 // Шаблонный метод traverseRand
 template <class StorageType>
-void Traverser::traverseRand(bool inverse = false)
+void Traverser::traverseRand(double density)
 {
     Randomizer rand;
     SizeType from = rand.uRand(0, m_pNodes->size() - 1);
@@ -142,7 +163,7 @@ void Traverser::traverseRand(bool inverse = false)
     while (from == to)
         to = rand.uRand(0, m_pNodes->size() - 1);
     
-    return inverse ? traverseInv<StorageType>(from, to) : traverse<StorageType>(from, to);
+    traverse<StorageType>(from, to, density);
 }
 
 // Метод getTraverseOrder
