@@ -10,6 +10,7 @@ void MonteCarlo::clear() {
     m_graph.clear();
     m_bfsResults.clear();
     m_dfsResults.clear();
+    m_dist.clear();
 }
 
 const List<int>& MonteCarlo::getBFSResults() const {
@@ -22,8 +23,8 @@ const List<int>& MonteCarlo::getDFSResults() const {
 
 // Инициализация алгоритма
 void MonteCarlo::initialize() {
-    for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) {
-        for (double curDensity : m_densities)
+    for (double curDensity : m_densities)
+        for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) {
         {
             // TODO разделить методы: надо получать не только эти данные
             try
@@ -73,7 +74,7 @@ void MonteCarlo::searchPath(double curDensity) {
     {
         traverser.traverse<std::queue<SizeType>>(from, to, curDensity);  // BFS
         m_bfsResults.push_back(traverser.getTraverseOrder().size());
-        m_dist = traverser.getPath().size();
+        m_dist.push_back(traverser.getPath().size());
         traverser.clear();
     }
     catch (std::exception& exc)
@@ -97,6 +98,6 @@ void MonteCarlo::searchPath(double curDensity) {
 // Логирование результатов
 void MonteCarlo::logResults(int graphIndex, double density, int searchIndex) {
 
-    m_logger.log(m_graph.size(), density, m_dist, getBFSResults().size(), getDFSResults().size());
+    m_logger.log(m_graph.size(), density, m_dist.back(), getBFSResults().back(), getDFSResults().back());
     // TODO правильное логирование с ипользование геттеров
 }

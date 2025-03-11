@@ -39,7 +39,7 @@ private:
     List<Node> m_graph;                   // Граф
     List<int> m_bfsResults;        // Результаты поиска в ширину
     List<int> m_dfsResults;        // Результаты поиска в глубину
-    SizeType m_dist;               // Геодезическое расстояние 
+    List<int> m_dist;              // Геодезическое расстояние 
     // TODO: добавить доп. данные методов
 
     Logger& m_logger;
