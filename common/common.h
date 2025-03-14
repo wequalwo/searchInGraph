@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <cstdint>
 
 #define MIN_INVERSE_DENSITY 0.5
 // Определяем удобные псевдонимы с помощью using

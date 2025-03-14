@@ -1,4 +1,4 @@
-#include "monte_carlo/monte_carlo.h"
+#include "monte_carlo.h"
 #include "graph/edge.h"
 
 MonteCarlo::MonteCarlo(const List<double>& densities, int numVertices, int numGraphs, int numSearches, Logger& log)
