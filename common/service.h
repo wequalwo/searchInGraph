@@ -3,7 +3,7 @@
 #define SERVICE_H
 
 #include <fstream>
-
+#include <math.h>
 #include "common.h"
 
 /**

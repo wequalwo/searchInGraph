@@ -13,7 +13,7 @@
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
 #include "prufer_graph/hist.h"
-#include "graph/traversal.h"
+// #include "graph/traversal.h"
 
 /**
  * @brief Главная функция, запускающая алгоритм
@@ -35,14 +35,14 @@
  */
 int main(int argc, char *argv[])
 {
-    if (argc != 3)
+    if (argc != 4)
     {
         std::cerr << "Usage: " << argv[0] << " <n>" << std::endl;
         return 1;
     }
     int n = std::atoi(argv[1]);          // Получаем значение N из аргументов командной строки
     double density = std::atof(argv[2]); // Получаем значение плотности из аргументов командной строки
-
+    int trials = std::atoi(argv[3]);     // Количество запусков
     // основной алгоритм построения дерева
     List<int> prufer_sequence = prufer_gen(n);
     List<EdgeType> edges = prufer_unpack(prufer_sequence, n);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
 
     List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
-
+    /*
     std::cout << "Try path find\n";
 
     Traverser traverser(&graph);
@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
     }
     std::cout << "\n"; 
     
-
-    int trials = 1000;
+   */
+    //int trials = 1000;
     std::vector<int> hist(n, 0); 
     for (int i = 0; i < trials; i++)
     {
@@ -93,9 +93,10 @@ int main(int argc, char *argv[])
             ++hist.at(edges.incident.size());
         }
     }
+ 
     write_vector_to_file(hist, "histogram.bin");
 
-
+    /*
     if (n <= 100)
     {
         for (const auto &node : graph) {
@@ -106,5 +107,6 @@ int main(int argc, char *argv[])
             std::cout << "\n";
         }
     }
+    */
     return 0;
 }
