@@ -135,7 +135,7 @@ void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double d
     if (l - n <= 0)
         return;
     
-    l = l - n;
+    //l = l - n;
 
     // Генерация списка доступных индексов (не входящих в existing_pairs)
     List<EdgeType> available_indices;

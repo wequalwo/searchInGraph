@@ -3,7 +3,8 @@
 #define PRUFER_H
 
 #include "randomizer/rand.h"
-
+#include <chrono>
+#include "common/common.h"
 
 /**
  * Функция для генерации последовательности Прюфера
