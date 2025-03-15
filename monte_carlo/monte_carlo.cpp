@@ -1,5 +1,16 @@
 #include "monte_carlo.h"
 #include "graph/edge.h"
+#include "prufer_graph/prufer.h"
+#include "prufer_graph/random_graph.h"
+/**
+ * @brief Конструктор класса MonteCarlo
+ * 
+ * @param densities Вектор плотностей графов, которые будут сгенерированы
+ * @param numVertices Количество вершин в каждом графе
+ * @param numGraphs Количество графов для генерации
+ * @param numSearches Количество поисков пути на каждом графе
+ * @param log Объект класса Logger для логирования информации и ошибок
+ */
 
 MonteCarlo::MonteCarlo(const List<double>& densities, int numVertices, int numGraphs, int numSearches, Logger& log)
     : m_densities(densities), m_numVertices(numVertices), m_numGraphs(numGraphs),
@@ -13,6 +24,7 @@ void MonteCarlo::clear() {
     m_dist.clear();
 }
 
+// Геттеря для получения результататов о работе программы
 const List<int>& MonteCarlo::getBFSResults() const {
     return m_bfsResults;
 }
@@ -43,18 +55,38 @@ void MonteCarlo::initialize() {
                 // Логируем результаты после каждого поиска
                 logResults(graphIndex, curDensity, searchIndex);
             }
+            std::cout << "\n";
         }
         clear();
     }
 }
 
+/**
+ * @brief Метод для генерации графа
+ * 
+ * @param numEdges количество рёбер в графе
+ * @param density плотность графа
+ * @return список вершин графа
+ * 
+ * @details
+ * 1. Генерирует дерево на numEdges рёбрах
+ * 2. Устанавливает плотность графа density
+ * 3. Возвращает список вершин
+ */
 List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
 
     // TODO : переделать на вызов наиболее оптимального метода
     List<Node> nodes = get_tree(numEdges);
     
     setGraphDensity(nodes, density);
-    
+    std::cout << "\n";
+    for (const auto &node : nodes) {
+        std::cout << "Node " << node.data << ": ";
+        for (SizeType neighbor : node.incident) {
+            std::cout << neighbor << " ";
+        }
+        std::cout << "\n";
+    }
     return nodes;
 }
 
@@ -70,8 +102,11 @@ void MonteCarlo::searchPath(double curDensity) {
     while (to == from)
         to = rand.uRand(0, m_graph.size() - 1);
 
+    std::cout << "From " << from << " to " << to << std::endl;
+
     try
     {
+        std::cout << "BFS\n";
         traverser.traverse<std::queue<SizeType>>(from, to, curDensity);  // BFS
         m_bfsResults.push_back(traverser.getTraverseOrder().size());
         m_dist.push_back(traverser.getPath().size());
@@ -85,6 +120,8 @@ void MonteCarlo::searchPath(double curDensity) {
 
     try
     {
+        std::cout << "DFS\n";
+
         traverser.traverse<std::stack<SizeType>>(from, to, curDensity);  // DFS
         m_dfsResults.push_back(traverser.getTraverseOrder().size());
     }
@@ -99,5 +136,5 @@ void MonteCarlo::searchPath(double curDensity) {
 void MonteCarlo::logResults(int graphIndex, double density, int searchIndex) {
 
     m_logger.log(m_graph.size(), density, m_dist.back(), getBFSResults().back(), getDFSResults().back());
-    // TODO правильное логирование с ипользование геттеров
+    // TODO правильное логирование с ипользование геттеров --- done
 }

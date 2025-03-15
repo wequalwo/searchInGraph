@@ -1,6 +1,7 @@
 #include "traversal.h"
 #include <stdexcept>
-
+#include <common/common.h>
+#include <iostream>
 // Шаблонный метод traverse
 template <class StorageType>
 void Traverser::traverse(SizeType from, SizeType to)
@@ -12,13 +13,14 @@ void Traverser::traverse(SizeType from, SizeType to)
     // Запоминаем, что зашли в вершину, и помещаем ее в историю
     m_visited.insert(cur);
     m_visitOrder.push_back(cur);
-    
+    std::cout << "Visit order: ";
     while (cur != to)
     {
         // У stack и queue разные методы, поэтому завернули в шаблон
         cur = extractElem(toVisit);
         // Запоминаем, что зашли в вершину, и помещаем ее в историю
         m_visited.insert(cur);
+        std::cout << cur << " ";
         m_visitOrder.push_back(cur);
         const auto& curNode = m_pNodes->at(cur);
         for (auto elem : curNode.incident)
@@ -30,6 +32,7 @@ void Traverser::traverse(SizeType from, SizeType to)
             }
         
     }
+    std::cout << std::endl;
 }
 
 template <class StorageType>
