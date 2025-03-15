@@ -1,4 +1,5 @@
 .vscode/
+.logger/
 a.exe
 tree.dot
 graph.dot
