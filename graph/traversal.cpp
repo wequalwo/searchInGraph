@@ -9,9 +9,6 @@ void Traverser::traverse(SizeType from, SizeType to)
     StorageType toVisit;
     toVisit.push(from);
     SizeType cur = from;
-    // Запоминаем, что зашли в вершину, и помещаем ее в историю
-    m_visited.insert(cur);
-    m_visitOrder.push_back(cur);
     
     while (cur != to)
     {
@@ -39,10 +36,7 @@ void Traverser::traverseInv(SizeType from, SizeType to)
     StorageType toVisit;
     toVisit.push(from);
     SizeType cur = from;
-    // Запоминаем, что зашли в вершину, и помещаем ее в историю
-    m_visited.insert(cur);
-    m_visitOrder.push_back(cur);
-    
+
     while (cur != to)
     {
         // У stack и queue разные методы, поэтому завернули в шаблон
