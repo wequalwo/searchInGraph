@@ -74,7 +74,7 @@ void MonteCarlo::searchPath(double curDensity) {
     {
         traverser.traverse<std::queue<SizeType>>(from, to, curDensity);  // BFS
         m_bfsResults.push_back(traverser.getTraverseOrder().size());
-        m_dist.push_back(traverser.getPath().size());
+        m_dist.push_back(traverser.getPath().size() - 1); // -1, чтобы не учитывать первую вершину
         traverser.clear();
     }
     catch (std::exception& exc)
