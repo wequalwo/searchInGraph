@@ -24,28 +24,29 @@ const List<int>& MonteCarlo::getDFSResults() const {
 // Инициализация алгоритма
 void MonteCarlo::initialize() {
     for (double curDensity : m_densities)
-        for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) {
+    {
+        for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) 
         {
-            // TODO разделить методы: надо получать не только эти данные
-            try
-            {
-                m_graph = buildGraph(m_numVertices, curDensity);
-            }
-            catch (std::exception& exc)
-            {
-                m_logger.errBuild(exc.what(), m_numVertices, curDensity);
-            }
-            
-            for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
-                // Выполняем поиск пути и обновляем результаты
-                searchPath(curDensity);
+                // TODO разделить методы: надо получать не только эти данные
+                try
+                {
+                    m_graph = buildGraph(m_numVertices, curDensity);
+                }
+                catch (std::exception& exc)
+                {
+                    m_logger.errBuild(exc.what(), m_numVertices, curDensity);
+                }
                 
-                // Логируем результаты после каждого поиска
-                logResults(graphIndex, curDensity, searchIndex);
-            }
-        }
+                for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
+                    // Выполняем поиск пути и обновляем результаты
+                    searchPath(curDensity);
+                    
+                    // Логируем результаты после каждого поиска
+                    logResults(graphIndex, curDensity, searchIndex);
+                }
         clear();
-    }
+        }
+    }   
 }
 
 List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
@@ -97,7 +98,6 @@ void MonteCarlo::searchPath(double curDensity) {
 
 // Логирование результатов
 void MonteCarlo::logResults(int graphIndex, double density, int searchIndex) {
-
     m_logger.log(m_graph.size(), density, m_dist.back(), getBFSResults().back(), getDFSResults().back());
     // TODO правильное логирование с ипользование геттеров
 }
