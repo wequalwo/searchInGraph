@@ -1,5 +1,7 @@
 #include "monte_carlo.h"
 #include "graph/edge.h"
+#include "prufer_graph/prufer.h"
+#include "prufer_graph/random_graph.h"
 
 MonteCarlo::MonteCarlo(const List<double>& densities, int numVertices, int numGraphs, int numSearches, Logger& log)
     : m_densities(densities), m_numVertices(numVertices), m_numGraphs(numGraphs),
@@ -70,8 +72,9 @@ void MonteCarlo::initialize() {
 List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
 
     // TODO : переделать на вызов наиболее оптимального метода
-    List<Node> nodes = get_tree(numEdges);
-    
+    //List<Node> nodes = get_tree(numEdges);
+
+    List<Node> nodes = transform(prufer_unpack(prufer_gen(numEdges), numEdges), numEdges);
     setGraphDensity(nodes, density);
     
     return nodes;

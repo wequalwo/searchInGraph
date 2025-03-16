@@ -1,6 +1,5 @@
 .vscode/
 logger/*.txt
-!logger/log.txt
 a.exe
 tree.dot
 graph.dot
