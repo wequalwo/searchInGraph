@@ -23,29 +23,47 @@ const List<int>& MonteCarlo::getDFSResults() const {
 
 // Инициализация алгоритма
 void MonteCarlo::initialize() {
+    using Clock = std::chrono::steady_clock;
+    std::cerr << "starting pocess\n\n";
+    Clock::time_point begin = Clock::now();
+    Clock::time_point iter = begin;
+    //Clock::time_point end = iter;
+
     for (double curDensity : m_densities)
     {
+        std::cerr << "density: " << curDensity << "\n";
+        iter = Clock::now();
         for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) 
         {
-                // TODO разделить методы: надо получать не только эти данные
-                try
-                {
-                    m_graph = buildGraph(m_numVertices, curDensity);
-                }
-                catch (std::exception& exc)
-                {
-                    m_logger.errBuild(exc.what(), m_numVertices, curDensity);
-                }
+            
+            // TODO разделить методы: надо получать не только эти данные
+            try
+            {
+                m_graph = buildGraph(m_numVertices, curDensity);
+            }
+            catch (std::exception& exc)
+            {
+                m_logger.errBuild(exc.what(), m_numVertices, curDensity);
+            }
+            
+            for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
+                // Выполняем поиск пути и обновляем результаты
+                searchPath(curDensity);
                 
-                for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
-                    // Выполняем поиск пути и обновляем результаты
-                    searchPath(curDensity);
-                    
-                    // Логируем результаты после каждого поиска
-                    logResults(graphIndex, curDensity, searchIndex);
-                }
-        clear();
+                // Логируем результаты после каждого поиска
+                logResults(graphIndex, curDensity, searchIndex);
+            }
+            if ((graphIndex + 1) % 100 == 0) {
+                std::cerr << graphIndex + 1 << " graphs processed\n";
+                std::cerr << "dt from start = " << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - begin).count() << "[mcs] = "
+                            << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - begin).count() / 1'000'000.0 << " sec" << '\n';
+                std::cerr << "dt from last graph iteration = " << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - iter).count() << "[mcs] = "
+                            << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - iter).count() / 1'000'000.0 << " sec" << '\n';
+                iter = Clock::now();
+            }
+            clear();
         }
+        std::cerr << "\n";
     }   
 }
 
