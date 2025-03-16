@@ -10,3 +10,5 @@ prufer_prod.exe
 prufer_prod_2.cpp
 tes.cpp
 histogram.bin
+logger/err.txt
+logger/log.txt
