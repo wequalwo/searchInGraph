@@ -29,12 +29,15 @@ void MonteCarlo::initialize() {
     std::cerr << "starting pocess\n\n";
     Clock::time_point begin = Clock::now();
     Clock::time_point iter = begin;
+    Clock::time_point persearch = begin;
+    float avg = 0;
     //Clock::time_point end = iter;
 
     for (double curDensity : m_densities)
     {
         std::cerr << "density: " << curDensity << "\n";
-        iter = Clock::now();
+        iter = Clock::now();        
+        avg = 0;
         for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex) 
         {
             
@@ -48,6 +51,7 @@ void MonteCarlo::initialize() {
                 m_logger.errBuild(exc.what(), m_numVertices, curDensity);
             }
             
+            persearch = Clock::now();
             for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
                 // Выполняем поиск пути и обновляем результаты
                 searchPath(curDensity);
@@ -55,13 +59,16 @@ void MonteCarlo::initialize() {
                 // Логируем результаты после каждого поиска
                 logResults(graphIndex, curDensity, searchIndex);
             }
+            avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
             if ((graphIndex + 1) % 100 == 0) {
                 std::cerr << graphIndex + 1 << " graphs processed\n";
+                std::cerr << "Avg search time per " << m_numSearches << "searches = " << avg / (100) << "[mcs] = " << avg / (100) / 1'000'000.0 << " sec" << '\n';
                 std::cerr << "dt from start = " << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - begin).count() << "[mcs] = "
                             << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - begin).count() / 1'000'000.0 << " sec" << '\n';
                 std::cerr << "dt from last graph iteration = " << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - iter).count() << "[mcs] = "
                             << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - iter).count() / 1'000'000.0 << " sec" << '\n';
                 iter = Clock::now();
+                avg = 0;
             }
             clear();
         }
