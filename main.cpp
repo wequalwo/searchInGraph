@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <string>   // Для std::stod
 #include "logger/logger.h"
 #include "monte_carlo/monte_carlo.h"
 
@@ -22,8 +22,10 @@ int main(int argc, char *argv[])
 
     List<double> densities;
     for (unsigned i = 4; i < argc; ++i)
-        densities.push_back(std::atof(argv[i])); // Получаем значение плотности из аргументов командной строки
-
+    {
+        std::cout << "Density: " << std::stod(argv[i]) << std::endl;
+        densities.push_back(std::stod(argv[i])); // Получаем значение плотности из аргументов командной строки
+    }
 	Logger log("logger/log.txt", "logger/err.txt");
     MonteCarlo mc(densities, n, graphs, searches, log);
 
