@@ -1,5 +1,5 @@
 .vscode/
-logger/*.txt
+logger/*.
 a.exe
 tree.dot
 graph.dot
@@ -8,6 +8,8 @@ main.exe
 prufer_prod.exe
 prufer_prod_2.cpp
 tes.cpp
-histogram.bin
+histogram
 logger/err.txt
 logger/log.txt
+histogram.bin
+density/fulllog.txt

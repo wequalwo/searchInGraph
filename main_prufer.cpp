@@ -5,15 +5,18 @@
  * 10k вершин: 2.16
  * 100k вершин: 25
  */
-
+//#pragma onces
 #include <iostream>
-#include "common/common.h"
-#include "common/service.h"
-
+#include <string>   // Для std::stod
+//#include "monte_carlo/monte_carlo.h"
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
-#include "prufer_graph/hist.h"
-// #include "graph/traversal.h"
+#include "common/service.h"
+
+#include "graph/tree.h"
+#include "graph/edge.h"
+#include "graph/traversal.h"
+#include "graph/node.h"
 
 /**
  * @brief Главная функция, запускающая алгоритм
@@ -44,12 +47,34 @@ int main(int argc, char *argv[])
     double density = std::atof(argv[2]); // Получаем значение плотности из аргументов командной строки
     int trials = std::atoi(argv[3]);     // Количество запусков
     // основной алгоритм построения дерева
-    List<int> prufer_sequence = prufer_gen(n);
-    List<EdgeType> edges = prufer_unpack(prufer_sequence, n);
-    generate_new_pairs_unpacked(n, edges, density);
+    //List<int> prufer_sequence = prufer_gen(n);
+    List<EdgeType> edges = prufer_unpack(prufer_gen(n), n);
+       
+    //int trials = 1000;
+    
+    std::vector<int> hist(n, 0); 
+    List<Node> graph;
+
+    for (int i = 0; i < trials; i++)
+    {
+        edges = prufer_unpack(prufer_gen(n), n);
+        //generate_new_pairs_unpacked(n, edges, density);
+        graph = transform(edges, n);
+        //graph = get_tree(n);
+        for (auto &edges : graph)
+        {
+            ++hist.at(edges.incident.size());
+        }
+    }
+    //std::string filename = "graph.dot";
+    //write_dot_file(edges, filename);
+
+    write_vector_to_file(hist, "histogram2.bin");
+
+    //generate_new_pairs_unpacked(n, edges, density);
 
 
-    List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
+    //List<Node> graph = transform(edges, n); // конвертация графа в матрицу инцедентности (можно считать, что бесплатно, по сравнению с самой генерацией)
     /*
     std::cout << "Try path find\n";
 
@@ -79,22 +104,8 @@ int main(int argc, char *argv[])
     }
     std::cout << "\n"; 
     
-   */
-    //int trials = 1000;
-    std::vector<int> hist(n, 0); 
-    for (int i = 0; i < trials; i++)
-    {
-        prufer_sequence = prufer_gen(n);
-        edges = prufer_unpack(prufer_sequence, n);
-        generate_new_pairs_unpacked(n, edges, density);
-        graph = transform(edges, n);
-        for (auto &edges : graph)
-        {
-            ++hist.at(edges.incident.size());
-        }
-    }
+
  
-    write_vector_to_file(hist, "histogram.bin");
 
     /*
     if (n <= 100)

@@ -5,7 +5,7 @@
 #include "randomizer/rand.h"
 #include <chrono>
 #include "common/common.h"
-
+#include <queue>
 /**
  * Функция для генерации последовательности Прюфера
  * @param n Количество вершин в дереве

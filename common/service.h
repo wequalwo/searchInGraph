@@ -21,7 +21,7 @@
  *
  * @throws std::runtime_error Если файл не удаётся открыть.
  */
-void write_dot_file(const List<std::pair<SizeType, SizeType>> &edges, const std::string &filename)
+void write_dot_file(const List<EdgeType> &edges, const std::string &filename)
 {
     std::ofstream file(filename);
     if (!file)
