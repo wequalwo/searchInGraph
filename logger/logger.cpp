@@ -56,5 +56,6 @@ void Logger::errBuild(const std::string& errTxt, SizeType graphSize, double dens
 void Logger::log(SizeType graphSize, double density, SizeType dist, SizeType bfs, SizeType dfs)
 {
     // пока лог упоротый, но зато отдельные части независимы
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_log << graphSize << ' ' << density << ' ' << dist << ' ' << bfs << ' ' << dfs << std::endl;
 }
