@@ -10,7 +10,7 @@
 class Randomizer
 {
     public:
-    Randomizer() : rng(std::random_device()())
+    Randomizer() : rng(std::random_device()()), bDist(0.5)
     {}
 
     int rand(int min, int max)
@@ -29,8 +29,12 @@ class Randomizer
     void shuffle(List<T>& target)
         { std::shuffle(target.begin(), target.end(), rng); }
 
+    bool randBool()
+        { return bDist(rng); }
+
     private:
-	std::mt19937 rng; 
+	std::mt19937 rng;
+    std::bernoulli_distribution bDist;
 };
 
 #endif // RAND_H

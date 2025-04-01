@@ -68,6 +68,9 @@ public:
     // очистка всех СД для запуска нового обхода
     void clear();
 
+    // Проверка, является ли граф связным
+    static bool checkConnected(const List<Node>& graph);
+
 private:
     // у стека и очереди разные интерфейсы, поэтому завернул извлечение элемента в специализированный шаблон
     template<class StorageType>

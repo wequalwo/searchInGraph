@@ -9,7 +9,7 @@
 
 class MonteCarlo {
 public:
-    MonteCarlo(const List<double>& densities, int numVertices, int numGraphs, int numSearches, Logger& log);
+    MonteCarlo(int numVertices, int numSearches, Logger& log);
 
     // Очищение графов и результатов
     void clear();
@@ -19,7 +19,8 @@ public:
     const List<int>& getDFSResults() const;
 
     // Инициализация алгоритма, запускает метод
-    void initialize();
+    void initHilbert(int numGraphs);
+    void initErdosRenyi(const List<double>& densities, int numGraphs);
 
 private:
     // Метод для построения графа
@@ -31,9 +32,7 @@ private:
     // логирование результатов
     void logResults(int graphIndex, double density, int searchIndex);
 
-    List<double> m_densities;      // Вектор плотностей
     int m_numVertices;                    // Количество вершин в графе
-    int m_numGraphs;                      // Количество графов для генерации
     int m_numSearches;                    // Количество поисков на каждом графе
 
     List<Node> m_graph;                   // Граф
