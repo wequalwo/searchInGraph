@@ -4,7 +4,7 @@
 
 #include "graph/edge.h"
 
-// генерируем пары случайных чисел и переводим их в ребра 
+// генерируем пары случайных чисел и переводим их в ребра
 void erdos_renyi_graph(List<Node>& tree, unsigned int edgesToAdd)
 {
     Randomizer rand;
@@ -75,7 +75,7 @@ List<Node> hilbert_graph(SizeType size)
     graph.reserve(size);
     for (SizeType i = 0; i < size; ++i)
         graph.push_back(Node{i, Set<SizeType>{}});
-    
+
     Randomizer rand;
     for (SizeType i = 0; i < size - 1; ++i)
         for (SizeType j = i + 1; j < size; ++j)

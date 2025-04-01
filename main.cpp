@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     unsigned int n = std::atoi(argv[2]);          // Получаем количество вершин из аргументов командной строки
     unsigned int searches = std::atoi(argv[4]);   // Количество запусков для каждого графа
     unsigned int graphs = std::atoi(argv[6]);     // Количество графов для каждой плотности или всего
-    unsigned int jobs = 1;                        // Количество потоков  
+    unsigned int jobs = 1;                        // Количество потоков
     unsigned int argIdx = 7;
     if (std::string(argv[argIdx]) == "-j")
     {
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
         if (jobs == 1)
         {
-            MonteCarlo mc(n, searches, log);   
+            MonteCarlo mc(n, searches, log);
             mc.initErdosRenyi(densities, graphs);
         }
         else
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             List<unsigned int> graphsCount(jobs, graphs/jobs);
             for (unsigned int i = 0; i < graphs % jobs; ++i)
                 ++graphsCount[i];
-            
+
             List<MonteCarlo> mcs;
             for (unsigned int i = 0; i < jobs; ++i)
                 mcs.push_back(MonteCarlo(n, searches, log));
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
             List<std::thread> threads;
             for (unsigned int i = 0; i < jobs; ++i)
                 threads.push_back(std::thread(&MonteCarlo::initErdosRenyi, &mcs[i], densities, graphsCount[i]));
-            
+
             for (unsigned int i = 0; i < jobs; ++i)
                 threads[i].join();
         }
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
         if (jobs == 1)
         {
-            MonteCarlo mc(n, searches, log);   
+            MonteCarlo mc(n, searches, log);
             mc.initHilbert(graphs);
         }
         else
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
             List<unsigned int> graphsCount(jobs, graphs/jobs);
             for (unsigned int i = 0; i < graphs % jobs; ++i)
                 ++graphsCount[i];
-            
+
             List<MonteCarlo> mcs;
             for (unsigned int i = 0; i < jobs; ++i)
                 mcs.push_back(MonteCarlo(n, searches, log));
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             List<std::thread> threads;
             for (unsigned int i = 0; i < jobs; ++i)
                 threads.push_back(std::thread(&MonteCarlo::initHilbert, &mcs[i], graphsCount[i]));
-            
+
             for (unsigned int i = 0; i < jobs; ++i)
                 threads[i].join();
         }

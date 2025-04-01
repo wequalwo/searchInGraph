@@ -10,7 +10,7 @@ void Traverser::traverse(SizeType from, SizeType to)
     StorageType toVisit;
     toVisit.push(from);
     SizeType cur = from;
-    
+
     while (cur != to)
     {
         // У stack и queue разные методы, поэтому завернули в шаблон
@@ -26,7 +26,7 @@ void Traverser::traverse(SizeType from, SizeType to)
                 m_visited.insert(elem); //< отмечаем, что посетили
                 m_prev[elem] = cur; //< и запоминаем, откуда в них пришли
             }
-        
+
     }
 }
 
@@ -54,7 +54,7 @@ void Traverser::traverseInv(SizeType from, SizeType to)
                 m_visited.insert(i); //< отмечаем, что посетили
                 m_prev[i] = cur; //< и запоминаем, откуда в них пришли
             }
-        
+
     }
 }
 
@@ -77,7 +77,7 @@ void Traverser::traverseRand(double density)
     SizeType to = from;
     while (from == to)
         to = rand.uRand(0, m_pNodes->size() - 1);
-    
+
     traverse<StorageType>(from, to, density);
 }
 

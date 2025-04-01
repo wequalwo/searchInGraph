@@ -83,7 +83,7 @@ std::vector<EdgeType> generate_new_pairs(
     // Выбор l случайных индексов с помощью std::sample
     std::vector<SizeType> new_pairs;
     new_pairs.reserve(l);
-    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(new_pairs), l, gen); 
+    std::sample(available_indices.begin(), available_indices.end(), std::back_inserter(new_pairs), l, gen);
 
     // Формируем итоговый список пар
     std::vector<EdgeType> graph_pairs;
@@ -134,7 +134,7 @@ void generate_new_pairs_unpacked(int n, List<EdgeType>& existing_pairs, double d
 
     if (l - n <= 0)
         return;
-    
+
     //l = l - n;
 
     // Генерация списка доступных индексов (не входящих в existing_pairs)
@@ -190,10 +190,10 @@ List<Node> transform(const List<EdgeType>& edges, int n)
     }
 
     // Clock::time_point end = Clock::now();
-    // std::cerr << "Time difference = " 
-    //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() 
-    //          << "[mcs] = " 
-    //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 
+    // std::cerr << "Time difference = "
+    //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count()
+    //          << "[mcs] = "
+    //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0
     //          << " sec" << '\n';
 
     return nodes;

@@ -20,14 +20,14 @@
 
 /**
  * @brief Главная функция, запускающая алгоритм
- * 
+ *
  * @param argc Количество аргументов командной строки
  * @param argv Аргументы командной строки:
  *             1. n - количество вершин в графе
  *             2. density - плотность графа (от 0 до 1)
- * 
+ *
  * @return 0 - успех, 1 - ошибка
- * 
+ *
  * @details
  * 1. Получает из аргументов командной строки количество вершин n и плотность density
  * 2. Генерирует последовательность Прюфера длины n - 2 (дерево на n вершинах)
@@ -49,10 +49,10 @@ int main(int argc, char *argv[])
     // основной алгоритм построения дерева
     //List<int> prufer_sequence = prufer_gen(n);
     List<EdgeType> edges = prufer_unpack(prufer_gen(n), n);
-       
+
     //int trials = 1000;
-    
-    std::vector<int> hist(n, 0); 
+
+    std::vector<int> hist(n, 0);
     List<Node> graph;
 
     for (int i = 0; i < trials; i++)
@@ -102,10 +102,10 @@ int main(int argc, char *argv[])
     {
         std::cout << id << " ";
     }
-    std::cout << "\n"; 
-    
+    std::cout << "\n";
 
- 
+
+
 
     /*
     if (n <= 100)

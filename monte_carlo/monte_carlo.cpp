@@ -36,11 +36,11 @@ void MonteCarlo::initErdosRenyi(const List<double>& densities, int numGraphs) {
     for (double curDensity : densities)
     {
         std::cerr << "density: " << curDensity << "\n";
-        iter = Clock::now();        
+        iter = Clock::now();
         avg = 0;
-        for (int graphIndex = 0; graphIndex < numGraphs; ++graphIndex) 
+        for (int graphIndex = 0; graphIndex < numGraphs; ++graphIndex)
         {
-            
+
             // TODO разделить методы: надо получать не только эти данные
             try
             {
@@ -50,12 +50,12 @@ void MonteCarlo::initErdosRenyi(const List<double>& densities, int numGraphs) {
             {
                 m_logger.errBuild(exc.what(), m_numVertices, curDensity);
             }
-            
+
             persearch = Clock::now();
             for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
                 // Выполняем поиск пути и обновляем результаты
                 searchPath(curDensity);
-                
+
                 // Логируем результаты после каждого поиска
                 logResults(graphIndex, curDensity, searchIndex);
             }
@@ -73,7 +73,7 @@ void MonteCarlo::initErdosRenyi(const List<double>& densities, int numGraphs) {
             clear();
         }
         std::cerr << "\n";
-    }   
+    }
 }
 
 void MonteCarlo::initHilbert(int numGraphs) {
@@ -84,8 +84,8 @@ void MonteCarlo::initHilbert(int numGraphs) {
     Clock::time_point persearch = begin;
     float avg = 0;
     //Clock::time_point end = iter;
-   
-    for (int graphIndex = 0; graphIndex < numGraphs; ++graphIndex) 
+
+    for (int graphIndex = 0; graphIndex < numGraphs; ++graphIndex)
     {
         List<Node> graph;
         bool isConnected = false;
@@ -108,13 +108,13 @@ void MonteCarlo::initHilbert(int numGraphs) {
                 m_logger.errSearch(exc.what(), m_numVertices, 0.5, 0, 0, "connected check");
             }
         }
-        
+
         persearch = Clock::now();
         for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
             // Выполняем поиск пути и обновляем результаты
-            // костыль: пока что граф в любом случае на списках смежности, поэтому считаем плотность 0 
+            // костыль: пока что граф в любом случае на списках смежности, поэтому считаем плотность 0
             searchPath(0);
-            
+
             // Логируем результаты после каждого поиска
             logResults(graphIndex, 0, searchIndex);
         }
@@ -140,7 +140,7 @@ List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
 
     List<Node> nodes = transform(prufer_unpack(prufer_gen(numEdges), numEdges), numEdges);
     setGraphDensity(nodes, density);
-    
+
     return nodes;
 }
 
@@ -149,7 +149,7 @@ void MonteCarlo::searchPath(double curDensity) {
 
     Randomizer rand;
     Traverser traverser(&m_graph);
-    
+
     SizeType from = rand.uRand(0, m_graph.size() - 1);
     SizeType to = from;
 
