@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <string>
+#include <mutex>
 
 #include "common/common.h"
 #include "graph/node.h"
@@ -22,6 +23,7 @@ public:
 private:
     std::ofstream m_log;
     std::ofstream m_err;
+    std::mutex m_mutex;
 };
 
 
