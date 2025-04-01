@@ -118,6 +118,30 @@ void Traverser::clear()
     m_visitOrder.clear();
 }
 
+bool Traverser::checkConnected(const List<Node>& graph)
+{
+    SizeType cur = graph.begin()->data;
+    std::stack<SizeType> toVisit;
+    Set<SizeType> visited;
+    visited.reserve(graph.size());
+    toVisit.push(cur);
+    while (!toVisit.empty())
+    {
+        cur = toVisit.top();
+        toVisit.pop();
+        visited.insert(cur);
+        const auto& curNode = graph.at(cur);
+        for (auto elem : curNode.incident)
+            if (!visited.count(elem)) //< все вершины, которые еще не посещали
+            {
+                toVisit.push(elem); //< помещаем в СД обхода
+                visited.insert(elem); //< отмечаем, что посетили
+            }
+        if (visited.size() == graph.size())
+            return true;
+    }
+    return false;
+}
 // ========== Реализация метода extractElem ==========
 
 /// Специализация для std::queue

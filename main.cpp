@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
         densities.push_back(std::stod(argv[i])); // Получаем значение плотности из аргументов командной строки
     }
 	Logger log("logger/log.txt", "logger/err.txt");
-    MonteCarlo mc(densities, n, graphs, searches, log);
+    MonteCarlo mc(n, searches, log);
 
-    mc.initialize();
+    mc.initErdosRenyi(densities, graphs);
 
 	return 0;
 }
