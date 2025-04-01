@@ -1,5 +1,6 @@
-#include "traversal.h"
 #include <stdexcept>
+
+#include "graph/traversal.h"
 
 // Шаблонный метод traverse
 template <class StorageType>

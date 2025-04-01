@@ -2,10 +2,12 @@
 #ifndef PRUFER_H
 #define PRUFER_H
 
-#include "randomizer/rand.h"
 #include <chrono>
-#include "common/common.h"
 #include <queue>
+
+#include "randomizer/rand.h"
+#include "common/common.h"
+
 /**
  * Функция для генерации последовательности Прюфера
  * @param n Количество вершин в дереве

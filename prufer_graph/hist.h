@@ -5,8 +5,6 @@
 #include "common/common.h"
 #include "common/service.h"
 
-
-
 // Функция для анализа распределения степеней вершин
 std::vector<SizeType> calculate_deg(int n, const std::vector<std::pair<SizeType, SizeType>> &pairs)
 {
