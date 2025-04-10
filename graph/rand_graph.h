@@ -69,21 +69,28 @@ void setGraphDensity(List<Node>& tree, double density)
     //          << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1'000'000.0 << " sec" << '\n';
 }
 
-List<Node> hilbert_graph(SizeType size)
+List<Node> hilbert_graph(SizeType size, double pi, int& num_edges)
 {
     List<Node> graph;
     graph.reserve(size);
     for (SizeType i = 0; i < size; ++i)
         graph.push_back(Node{i, Set<SizeType>{}});
-
+    
+    num_edges = 0;
     Randomizer rand;
+    
     for (SizeType i = 0; i < size - 1; ++i)
+    {
         for (SizeType j = i + 1; j < size; ++j)
-            if (rand.randBool())
+        {
+            if (rand.randProb(pi))
             {
                 graph[i].incident.insert(j);
                 graph[j].incident.insert(i);
+                ++num_edges;
             }
+        }
+    }
 
     return graph;
 }

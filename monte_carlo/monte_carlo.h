@@ -19,7 +19,7 @@ public:
     const List<int>& getDFSResults() const;
 
     // Инициализация алгоритма, запускает метод
-    void initHilbert(int numGraphs);
+    void initHilbert(int numGraphs, double pi);
     void initErdosRenyi(const List<double>& densities, int numGraphs);
 
 private:

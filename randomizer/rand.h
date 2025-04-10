@@ -9,9 +9,8 @@
 
 class Randomizer
 {
-    public:
-    Randomizer() : rng(std::random_device()()), bDist(0.5)
-    {}
+public:
+    Randomizer() : rng(std::random_device()()), bDist(0.5) {}
 
     int rand(int min, int max)
     {
@@ -27,13 +26,23 @@ class Randomizer
 
     template<class T>
     void shuffle(List<T>& target)
-        { std::shuffle(target.begin(), target.end(), rng); }
+    {
+        std::shuffle(target.begin(), target.end(), rng);
+    }
 
     bool randBool()
-        { return bDist(rng); }
+    {
+        return bDist(rng);
+    }
 
-    private:
-	std::mt19937 rng;
+    bool randProb(double p)
+    {
+        std::bernoulli_distribution dist(p);
+        return dist(rng);
+    }
+
+private:
+    std::mt19937 rng;
     std::bernoulli_distribution bDist;
 };
 

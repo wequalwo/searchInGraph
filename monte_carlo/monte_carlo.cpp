@@ -76,28 +76,32 @@ void MonteCarlo::initErdosRenyi(const List<double>& densities, int numGraphs) {
     }
 }
 
-void MonteCarlo::initHilbert(int numGraphs) {
+void MonteCarlo::initHilbert(int numGraphs, double pi) {
     using Clock = std::chrono::steady_clock;
     std::cerr << "starting Hilbert process on " + std::to_string(numGraphs) + " graphs\n";
     Clock::time_point begin = Clock::now();
     Clock::time_point iter = begin;
     Clock::time_point persearch = begin;
     float avg = 0;
+    uint64_t fullEdges = m_numVertices * (m_numVertices - 1) / 2;
+    double density = 0;
     //Clock::time_point end = iter;
-
+    int numEdges = 0;
     for (int graphIndex = 0; graphIndex < numGraphs; ++graphIndex)
     {
         List<Node> graph;
+        numEdges = 0;
         bool isConnected = false;
         while (!isConnected)
         {
+
             try
             {
-                m_graph = hilbert_graph(m_numVertices);
+                m_graph = hilbert_graph(m_numVertices, pi, numEdges);
             }
             catch (std::exception& exc)
             {
-                m_logger.errBuild(exc.what(), m_numVertices, 0.5);
+                m_logger.errBuild(exc.what(), m_numVertices, pi);
             }
             try
             {
@@ -105,18 +109,19 @@ void MonteCarlo::initHilbert(int numGraphs) {
             }
             catch (std::exception& exc)
             {
-                m_logger.errSearch(exc.what(), m_numVertices, 0.5, 0, 0, "connected check");
+                m_logger.errSearch(exc.what(), m_numVertices, pi, 0, 0, "connected check");
             }
         }
-
+        density = (double)numEdges/(double)fullEdges;
         persearch = Clock::now();
         for (int searchIndex = 0; searchIndex < m_numSearches; ++searchIndex) {
             // Выполняем поиск пути и обновляем результаты
             // костыль: пока что граф в любом случае на списках смежности, поэтому считаем плотность 0
-            searchPath(0);
+            // Исправлено
+            searchPath(density);
 
             // Логируем результаты после каждого поиска
-            logResults(graphIndex, 0, searchIndex);
+            logResults(graphIndex, density, searchIndex);
         }
         avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
         if ((graphIndex + 1) % 100 == 0) {
@@ -168,7 +173,6 @@ void MonteCarlo::searchPath(double curDensity) {
         m_logger.errSearch(exc.what(), m_numVertices, curDensity, from, to, "BFS");
         m_logger.logErrGraph(m_graph);
     }
-
     try
     {
         traverser.traverse<std::stack<SizeType>>(from, to, curDensity);  // DFS
