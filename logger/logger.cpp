@@ -4,16 +4,18 @@
 #include "logger/logger.h"
 
 
-Logger::Logger(const std::string& log, const std::string& err)
+Logger::Logger(const std::string& log, const std::string& err, SizeType loggerIdx)
 {
-    std::filesystem::path logPath(log);
+    std::string logName = log + std::to_string(loggerIdx) + std::string(".txt");
+    std::filesystem::path logPath(logName);
     if (std::filesystem::exists(log))
         std::cerr << "log file exists" << std::endl;
     m_log.open(logPath);
     if (!m_log.is_open()) {
         std::cerr << "Error opening log file." << std::endl;
     }
-    std::filesystem::path errPath(err);
+    std::string errName = err + std::to_string(loggerIdx) + std::string(".txt");
+    std::filesystem::path errPath(errName);
     if (std::filesystem::exists(errPath))
         std::cerr << "log file exists" << std::endl;
     m_err.open(errPath);
@@ -56,6 +58,5 @@ void Logger::errBuild(const std::string& errTxt, SizeType graphSize, double dens
 void Logger::log(SizeType graphSize, double density, SizeType dist, SizeType bfs, SizeType dfs)
 {
     // пока лог упоротый, но зато отдельные части независимы
-    std::lock_guard<std::mutex> lock(m_mutex);
     m_log << graphSize << ' ' << density << ' ' << dist << ' ' << bfs << ' ' << dfs << std::endl;
 }

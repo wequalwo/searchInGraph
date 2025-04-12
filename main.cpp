@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     std::string mod = argv[argIdx];
-    Logger log("logger/log.txt", "logger/err.txt");
+    std::string log = "logger/log", err = "logger/err";
 
     if (mod == "-er")
     {
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
         if (jobs == 1)
         {
-            MonteCarlo mc(n, searches, log);
+            MonteCarlo mc(n, searches, log, err, 0);
             mc.initErdosRenyi(densities, graphs);
         }
         else
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
             List<MonteCarlo> mcs;
             for (unsigned int i = 0; i < jobs; ++i)
-                mcs.push_back(MonteCarlo(n, searches, log));
+                mcs.push_back(MonteCarlo(n, searches, log, err, i));
 
             List<std::thread> threads;
             for (unsigned int i = 0; i < jobs; ++i)
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
         if (jobs == 1)
         {
-            MonteCarlo mc(n, searches, log);
+            MonteCarlo mc(n, searches, log, err, 0);
             mc.initHilbert(graphs, pi);
         }
         else
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 
             List<MonteCarlo> mcs;
             for (unsigned int i = 0; i < jobs; ++i)
-                mcs.push_back(MonteCarlo(n, searches, log));
+                mcs.push_back(MonteCarlo(n, searches, log, err, i));
 
             List<std::thread> threads;
             for (unsigned int i = 0; i < jobs; ++i)

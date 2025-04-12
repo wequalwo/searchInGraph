@@ -4,7 +4,6 @@
 
 #include <fstream>
 #include <string>
-#include <mutex>
 
 #include "common/common.h"
 #include "graph/node.h"
@@ -12,7 +11,10 @@
 class Logger
 {
 public:
-    Logger(const std::string& log, const std::string& err);
+    Logger(const std::string& log, const std::string& err, SizeType threadIdx);
+
+    Logger(const Logger& other) = delete;
+    Logger(Logger&& other) = default;
     ~Logger();
 
     void errSearch(const std::string& errTxt, SizeType graphSize, double density, SizeType from, SizeType to,
@@ -23,7 +25,6 @@ public:
 private:
     std::ofstream m_log;
     std::ofstream m_err;
-    std::mutex m_mutex;
 };
 
 

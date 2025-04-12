@@ -3,8 +3,8 @@
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
 
-MonteCarlo::MonteCarlo(int numVertices, int numSearches, Logger& log)
-    : m_numVertices(numVertices), m_numSearches(numSearches), m_logger(log)
+MonteCarlo::MonteCarlo(int numVertices, int numSearches, const std::string& log, const std::string& err, SizeType mcIdx)
+    : m_numVertices(numVertices), m_numSearches(numSearches), m_logger(log, err, mcIdx)
 {}
 
 void MonteCarlo::clear() {

@@ -9,7 +9,10 @@
 
 class MonteCarlo {
 public:
-    MonteCarlo(int numVertices, int numSearches, Logger& log);
+    MonteCarlo(int numVertices, int numSearches, const std::string& log, const std::string& err, SizeType mcIdx);
+
+    MonteCarlo(const MonteCarlo& other) = delete;
+    MonteCarlo(MonteCarlo&& other) = default;
 
     // Очищение графов и результатов
     void clear();
@@ -41,7 +44,7 @@ private:
     List<int> m_dist;              // Геодезическое расстояние
     // TODO: добавить доп. данные методов
 
-    Logger& m_logger;
+    Logger m_logger;
 };
 
 #endif // MONTE_CARLO_H
