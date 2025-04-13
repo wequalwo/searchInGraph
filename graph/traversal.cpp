@@ -63,15 +63,9 @@ template <class StorageType>
 void Traverser::traverse(SizeType from, SizeType to, double density)
 {
     if (density >= MIN_INVERSE_DENSITY and auto_inv)
-    {
         traverseInv<StorageType>(from, to);
-        printf("inverse\n");
-    }
     else
-    {
         traverse<StorageType>(from, to);
-        printf("direct\n");
-    }
 }
 
 // Шаблонный метод traverseRand
