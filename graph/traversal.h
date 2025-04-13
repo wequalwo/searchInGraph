@@ -12,7 +12,7 @@ class Traverser
 {
 public:
     // указатель, чтобы не копировать список
-    Traverser(List<Node>* nodes) : m_pNodes(nodes)
+    Traverser(List<Node>* nodes, bool auto_inv = true) : m_pNodes(nodes), auto_inv(auto_inv)
     {} //< вероятно, имеет смысл зарезервировать место для некоторого числа вершин во вспомогательных структурах
 
     /**
@@ -32,6 +32,7 @@ public:
      * @param from начальная вершина
      * @param to конечная вершина
      * @param density плотность графа: в случае большой плотности будет выбран инвертированный обход
+     * Необходимо, если на выход подается граф в виде антиребер
      */
     template <class StorageType>
     void traverse(SizeType from, SizeType to, double density);
@@ -76,6 +77,7 @@ private:
     template<class StorageType>
     SizeType extractElem(StorageType& storage);
 
+    bool auto_inv = true;
     List<Node>* m_pNodes;
     Set<SizeType> m_visited;
     Map<SizeType, SizeType> m_prev;

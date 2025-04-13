@@ -118,7 +118,7 @@ void MonteCarlo::initHilbert(int numGraphs, double pi) {
             // Выполняем поиск пути и обновляем результаты
             // костыль: пока что граф в любом случае на списках смежности, поэтому считаем плотность 0
             // Исправлено
-            searchPath(density);
+            searchPath(density, false);
 
             // Логируем результаты после каждого поиска
             logResults(graphIndex, density, searchIndex);
@@ -150,10 +150,10 @@ List<Node> MonteCarlo::buildGraph(int numEdges, double density) {
 }
 
 // Поиск пути на графе (в текущем графе)
-void MonteCarlo::searchPath(double curDensity) {
+void MonteCarlo::searchPath(double curDensity, bool auto_inv) {
 
     Randomizer rand;
-    Traverser traverser(&m_graph);
+    Traverser traverser(&m_graph, auto_inv);
 
     SizeType from = rand.uRand(0, m_graph.size() - 1);
     SizeType to = from;

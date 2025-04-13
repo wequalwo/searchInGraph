@@ -30,7 +30,7 @@ private:
     List<Node> buildGraph(int numEdges, double density);
 
     // Метод для выполнения поиска пути на графе
-    void searchPath(double curDensity);
+    void searchPath(double curDensity, bool auto_inv = true);
 
     // логирование результатов
     void logResults(int graphIndex, double density, int searchIndex);

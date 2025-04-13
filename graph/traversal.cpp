@@ -62,10 +62,16 @@ void Traverser::traverseInv(SizeType from, SizeType to)
 template <class StorageType>
 void Traverser::traverse(SizeType from, SizeType to, double density)
 {
-    if (density >= MIN_INVERSE_DENSITY)
+    if (density >= MIN_INVERSE_DENSITY and auto_inv)
+    {
         traverseInv<StorageType>(from, to);
+        printf("inverse\n");
+    }
     else
+    {
         traverse<StorageType>(from, to);
+        printf("direct\n");
+    }
 }
 
 // Шаблонный метод traverseRand
@@ -170,5 +176,5 @@ SizeType Traverser::extractElem(StorageType& storage)
 }
 
 
-template void Traverser::traverse<class std::queue<SizeType>>(SizeType from, SizeType to, double);
-template void Traverser::traverse<class std::stack<SizeType>>(SizeType from, SizeType to, double);
+template void Traverser::traverse<std::queue<SizeType>>(SizeType from, SizeType to, double density);
+template void Traverser::traverse<std::stack<SizeType>>(SizeType from, SizeType to, double density);
