@@ -37,9 +37,7 @@ std::vector<SizeType> generate_degree_sample(
     // Используем unordered_set для быстрого поиска
     std::unordered_set<SizeType> existing_set;
     for (const auto &pair : existing_pairs)
-    {
-        existing_set.insert((pair.first - 1) * (2 * n - pair.first) / 2 + (pair.second - pair.first - 1));
-    }
+        existing_set.insert(index_from_pair(n, pair.first, pair.second));
 
     // Определяем l — сколько новых пар нужно добавить
     std::random_device rd;
