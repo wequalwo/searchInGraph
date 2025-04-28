@@ -3,8 +3,8 @@
 #define MONTE_CARLO_H
 
 #include "common/common.h"
-#include "graph/tree.h"
-#include "graph/traversal.h"
+#include "graph/tree/rand_tree.h"
+#include "graph/traversal/traversal.h"
 #include "logger/logger.h"
 
 class MonteCarlo {

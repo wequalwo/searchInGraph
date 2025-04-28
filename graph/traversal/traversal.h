@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TRAVERSAL_H
-#define TRAVERSAL_H
+#ifndef GRAPH_TRAVERSAL_TRAVERSAL_H
+#define GRAPH_TRAVERSAL_TRAVERSAL_H
 
 #include <stack>
 #include <queue>
@@ -87,4 +87,4 @@ private:
 //template<class StorageType> void
 //Traverser::traverse(SizeType from, SizeType to, double density);
 
-#endif // TRAVERSAL_H
+#endif // GRAPH_TRAVERSAL_TRAVERSAL_H

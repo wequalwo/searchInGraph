@@ -13,9 +13,9 @@
 #include "prufer_graph/random_graph.h"
 #include "common/service.h"
 
-#include "graph/tree.h"
+#include "graph/tree/rand_tree.h"
 #include "graph/edge.h"
-#include "graph/traversal.h"
+#include "graph/traversal/traversal.h"
 #include "graph/node.h"
 
 /**

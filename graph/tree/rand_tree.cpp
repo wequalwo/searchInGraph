@@ -1,4 +1,4 @@
-#include "graph/tree.h"
+#include "graph/tree/rand_tree.h"
 #include "randomizer/rand.h"
 
 List<Node> get_tree(SizeType size)
