@@ -1,8 +1,6 @@
 #pragma once
-#ifndef NODE_H
-#define NODE_H
-
-#include <memory>
+#ifndef GRAPH_NODE_H
+#define GRAPH_NODE_H
 
 #include "common/common.h"
 
@@ -18,4 +16,4 @@ struct Node
 };
 
 
-#endif // NODE_H
+#endif // GRAPH_NODE_H

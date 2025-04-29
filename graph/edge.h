@@ -1,14 +1,8 @@
 #pragma once
-#ifndef EDGE_H
-#define EDGE_H
+#ifndef GRAPH_EDGE_H
+#define GRAPH_EDGE_H
 
-#include <iostream>
-#include <cmath>
-#include <chrono>
-
-#include "common/common.h"
 #include "graph/node.h"
-#include "randomizer/rand.h"
 
 // Заполняем множество номеров ребер, которые уже присутствуют в дереве
 // Потом это может быть использовано для больших плотностей, чтобы не исключить нужное ребро
@@ -41,4 +35,4 @@ bool checkEdgeInsertable(const List<Node>& graph, SizeType first, SizeType secon
     return firstIncident.count(second) == 0;
 }
 
-#endif //EDGE_H
+#endif // GRAPH_EDGE_H

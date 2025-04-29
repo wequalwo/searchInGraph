@@ -1,8 +1,9 @@
 #pragma once
-#ifndef RANG_GRAPH
-#define RANG_GRAPH
+#ifndef GRAPH_RAND_GRAPH_H
+#define GRAPH_RAND_GRAPH_H
 
-#include "graph/edge.h"
+#include "graph/node.h"
+#include "common/service.h"
 
 // генерируем пары случайных чисел и переводим их в ребра
 void erdos_renyi_graph(List<Node>& tree, unsigned int edgesToAdd)
@@ -95,4 +96,4 @@ List<Node> hilbert_graph(SizeType size, double pi, int& num_edges)
     return graph;
 }
 
-#endif // RANG_GRAPH
+#endif // GRAPH_RAND_GRAPH_H
