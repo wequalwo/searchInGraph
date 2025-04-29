@@ -24,6 +24,12 @@ public:
         return dist(rng);
     }
 
+    double randNorm(double mean, double dev)
+    {
+        std::normal_distribution<double> dist(mean, dev);
+        return dist(rng);
+    }
+
     template<class T>
     void shuffle(List<T>& target)
     {
