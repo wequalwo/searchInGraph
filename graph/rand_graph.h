@@ -81,19 +81,52 @@ List<Node> hilbert_graph(SizeType size, double pi, int& num_edges)
     Randomizer rand;
     
     for (SizeType i = 0; i < size - 1; ++i)
-    {
         for (SizeType j = i + 1; j < size; ++j)
-        {
             if (rand.randProb(pi))
             {
                 graph[i].incident.insert(j);
                 graph[j].incident.insert(i);
                 ++num_edges;
             }
-        }
-    }
 
     return graph;
+}
+
+// distribute weignts among edges in random order
+List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
+{
+    int edges = 0;
+    for (const auto& node : graph)
+        edges += node.incident.size();
+    if (edges / 2 != weights.size())
+        throw std::logic_error("invalid weights number");
+
+    List<unsigned int> edgesInds;
+    for (const auto& node : graph)
+    {
+        for (const auto& adjNode : node.incident)
+            if (node.data < graph[adjNode].data)
+                edgesInds.push_back(index_from_pair(graph.size(), node.data, graph[adjNode].data));
+    }
+    if (edgesInds.size() != weights.size())
+        throw std::logic_error("invalid weights number");
+
+    Randomizer rand;
+    List<double> copyWeights(weights);
+    rand.shuffle(copyWeights);
+
+    List<WNode> wGraph;
+    for (SizeType i = 0; i < graph.size(); ++i)
+        wGraph.push_back(WNode(i, Map<SizeType, double>{}));
+
+    for (SizeType i = 0; i < edgesInds.size(); ++i)
+    {
+        auto edgePair = pair_from_index(edgesInds[i], graph.size());
+        wGraph[edgePair.first].incident[edgePair.second] = copyWeights[i];
+        wGraph[edgePair.second].incident[edgePair.first] = copyWeights[i];
+    }
+
+    return wGraph;
 }
 
 #endif // GRAPH_RAND_GRAPH_H

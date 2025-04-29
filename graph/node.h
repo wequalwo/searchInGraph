@@ -7,7 +7,7 @@
 // Структура узла графа
 struct Node
 {
-	// Конструктор принимает ID узла и список инцидентных узлов
+	// Конструктор принимает ID узла и множество смежных узлов
 	Node(SizeType id, Set<SizeType> nodes) : data(id), incident(nodes)
 		{ }
 
@@ -15,5 +15,14 @@ struct Node
 	Set<SizeType> incident;   // Список соседних узлов (смежность)
 };
 
+struct WNode
+{
+	// Конструктор принимает ID узла и множество инцидентых ребер с весами
+	WNode(SizeType id, Map<SizeType, double> nodes) : data(id), incident(nodes)
+		{ }
+
+    SizeType data;            		  // Значение узла
+	Map<SizeType, double> incident;   // Веса инцидентных ребер
+};
 
 #endif // GRAPH_NODE_H
