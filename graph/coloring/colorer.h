@@ -10,6 +10,8 @@ class Colorer
     int greedyColoring(const List<Node>& graph);
 
     int naiveColoring(const List<Node>& graph);
+
+    bool randColoring(const List<Node>& graph, SizeType colors);
 };
 
 #endif // GRAPH_COLORING_COLORER_H

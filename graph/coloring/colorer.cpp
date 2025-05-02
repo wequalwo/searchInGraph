@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "graph/coloring/colorer.h"
+#include "randomizer/rand.h"
 
 int Colorer::greedyColoring(const List<Node>& graph)
 {
@@ -55,4 +56,30 @@ int Colorer::naiveColoring(const List<Node>& graph)
         colors[i] = *std::min_element(candidateColors.begin(), candidateColors.end());
     }
     return *std::max_element(colors.begin(), colors.end());
+}
+
+bool Colorer::randColoring(const List<Node>& graph, SizeType colors)
+{
+    Randomizer rand;
+    SizeType size = graph.size();
+    List<SizeType> coloring(size, 0);
+    for (SizeType i = 0; i < size; ++i)
+    {
+        Set<SizeType> candidateColors;
+        for (SizeType j = 1; j <= colors; ++j)
+            candidateColors.insert(i);
+        for (const auto& adjVert : graph[i].incident)
+            candidateColors.erase(coloring[adjVert]);
+
+        // can't choose color for a vertex
+        if (candidateColors.size() == 0)
+            return false;
+        // choose a random color from candidates
+        SizeType randColor = rand.uRand(0, candidateColors.size() - 1);
+        auto itr = candidateColors.begin();
+        std::advance(itr, randColor);
+        coloring[i] =  *itr;
+    }
+    // all verts have a color
+    return true;
 }
