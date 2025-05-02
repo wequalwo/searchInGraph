@@ -3,6 +3,7 @@
 #include "graph/coloring/colorer.h"
 #include "randomizer/rand.h"
 
+// choosing minimal color for each vertex starting from larger degrees
 int Colorer::greedyColoring(const List<Node>& graph)
 {
     SizeType size = graph.size();
@@ -41,6 +42,7 @@ int Colorer::greedyColoring(const List<Node>& graph)
     return color - 1;
 }
 
+// choosing color with min number for each vertex in fixed order
 int Colorer::naiveColoring(const List<Node>& graph)
 {
     SizeType size = graph.size();
@@ -58,6 +60,8 @@ int Colorer::naiveColoring(const List<Node>& graph)
     return *std::max_element(colors.begin(), colors.end());
 }
 
+// choose one of possible colors by random
+// returns true if found a valid coloring
 bool Colorer::randColoring(const List<Node>& graph, SizeType colors)
 {
     Randomizer rand;
