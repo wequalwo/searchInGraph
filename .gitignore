@@ -17,5 +17,4 @@ C$$$LETI$$$0DMNIR4g++ -std=c++17 -g.txt
 analyse.ipynb
 build.bat
 logger/
-mainspan.cpp
 mainspan.exe
