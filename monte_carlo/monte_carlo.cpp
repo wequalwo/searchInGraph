@@ -1,3 +1,4 @@
+#include <iostream>
 #include "monte_carlo.h"
 #include "graph/rand_graph.h"
 #include "prufer_graph/prufer.h"

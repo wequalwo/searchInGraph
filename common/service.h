@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <math.h>
-
+#include <cassert>
 #include "common.h"
 
 /**
