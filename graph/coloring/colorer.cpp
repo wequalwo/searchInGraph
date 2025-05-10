@@ -43,22 +43,54 @@ int Colorer::greedyColoring(const List<Node>& graph)
 }
 
 // choosing color with min number for each vertex in fixed order
+// int Colorer::naiveColoring(const List<Node>& graph)
+// {
+//     SizeType size = graph.size();
+//     List<SizeType> colors(size, 0);
+//     for (SizeType i = 0; i < size; ++i)
+//     {
+//         Set<SizeType> candidateColors;
+//         for (SizeType j = 1; j <= size; ++j)
+//             candidateColors.insert(j);
+//         for (const auto& adjVert : graph[i].incident)
+//             candidateColors.erase(colors[adjVert]);
+
+//         colors[i] = *std::min_element(candidateColors.begin(), candidateColors.end());
+//     }
+//     return *std::max_element(colors.begin(), colors.end());
+// }
+
+
+// Переписал на булевы массивы, так должно работать быстрее
 int Colorer::naiveColoring(const List<Node>& graph)
 {
     SizeType size = graph.size();
     List<SizeType> colors(size, 0);
+
     for (SizeType i = 0; i < size; ++i)
     {
-        Set<SizeType> candidateColors;
-        for (SizeType j = 1; j <= size; ++j)
-            candidateColors.insert(i);
+        // 0-й индекс не используется, т.к. цвета начинаются с 1
+        std::vector<bool> used(size + 1, false);
         for (const auto& adjVert : graph[i].incident)
-            candidateColors.erase(colors[adjVert]);
-
-        colors[i] = *std::min_element(candidateColors.begin(), candidateColors.end());
+        {
+            SizeType color = colors[adjVert];
+            if (color != 0)
+                used[color] = true;
+        }
+        
+        for (SizeType c = 1; c <= size; ++c)
+        {
+            if (!used[c])
+            {
+                colors[i] = c;
+                break;
+            }
+        }
     }
+
     return *std::max_element(colors.begin(), colors.end());
 }
+
 
 // choose one of possible colors by random
 // returns true if found a valid coloring
@@ -71,12 +103,12 @@ bool Colorer::randColoring(const List<Node>& graph, SizeType colors)
     {
         Set<SizeType> candidateColors;
         for (SizeType j = 1; j <= colors; ++j)
-            candidateColors.insert(i);
+            candidateColors.insert(j);
         for (const auto& adjVert : graph[i].incident)
             candidateColors.erase(coloring[adjVert]);
 
         // can't choose color for a vertex
-        if (candidateColors.size() == 0)
+        if (candidateColors.empty())
             return false;
         // choose a random color from candidates
         SizeType randColor = rand.uRand(0, candidateColors.size() - 1);

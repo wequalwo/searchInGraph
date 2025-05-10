@@ -3,7 +3,9 @@
 #define GRAPH_RAND_GRAPH_H
 
 #include "graph/node.h"
+#include "graph/edge.h"
 #include "common/service.h"
+#include <chrono>
 
 // генерируем пары случайных чисел и переводим их в ребра
 void erdos_renyi_graph(List<Node>& tree, unsigned int edgesToAdd)

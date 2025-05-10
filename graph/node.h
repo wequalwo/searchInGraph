@@ -21,7 +21,8 @@ struct WNode
 	WNode(SizeType id, Map<SizeType, double> nodes) : data(id), incident(nodes)
 		{ }
 
-    SizeType data;            		  // Значение узла
+	WNode() = default; 
+	SizeType data;            		  // Значение узла
 	Map<SizeType, double> incident;   // Веса инцидентных ребер
 };
 
