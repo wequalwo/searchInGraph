@@ -48,11 +48,11 @@ int main() {
     Spanner sp;
 
     std::cout << "Prim's MST:\n";
-    auto primTree = sp.pSpan(graph);
+    auto primTree = sp.primSpan(graph);
     printGraph(primTree);
 
     std::cout << "Kruskal's MST:\n";
-    auto kruskalTree = sp.kSpan(graph);
+    auto kruskalTree = sp.kruskalSpan(graph);
     printGraph(kruskalTree);
 
     return 0;

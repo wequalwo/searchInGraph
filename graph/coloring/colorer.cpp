@@ -61,7 +61,7 @@ int Colorer::greedyColoring(const List<Node>& graph)
 // }
 
 
-// Переписал на булевы массивы, так должно работать быстрее
+// bool vectors implementaion
 int Colorer::naiveColoring(const List<Node>& graph)
 {
     SizeType size = graph.size();
@@ -69,7 +69,7 @@ int Colorer::naiveColoring(const List<Node>& graph)
 
     for (SizeType i = 0; i < size; ++i)
     {
-        // 0-й индекс не используется, т.к. цвета начинаются с 1
+        // 0-th index usless, colors from 1
         std::vector<bool> used(size + 1, false);
         for (const auto& adjVert : graph[i].incident)
         {
