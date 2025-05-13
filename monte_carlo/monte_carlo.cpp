@@ -57,7 +57,7 @@ void MonteCarloTraversal::runMonteCarlo() {
             {
                 try
                 {
-                    m_graph = buildGraph(m_numVertices, curDensity);
+                    m_graph = buildGraph(curDensity);
                     logDenisty = curDensity;
                 }
                 catch (std::exception& exc)

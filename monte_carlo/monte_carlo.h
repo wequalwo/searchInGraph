@@ -71,7 +71,7 @@ private:
     // логирование результатов
     void logResults(int graphIndex, double density, int searchIndex);
 
-    List<Node> m_graph;                   // Граф
+    List<Node> m_graph;            // Граф
     List<int> m_bfsResults;        // Результаты поиска в ширину
     List<int> m_dfsResults;        // Результаты поиска в глубину
     List<int> m_dist;              // Геодезическое расстояние

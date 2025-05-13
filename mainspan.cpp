@@ -39,21 +39,24 @@ int main() {
     graph[3].incident[4] = 11;
     graph[4].incident[3] = 11;
 
-    graph[3].incident[5] = 9.0;
-    graph[5].incident[3] = 9.0;
+    graph[3].incident[5] = 9;
+    graph[5].incident[3] = 9;
 
     graph[4].incident[5] = 10;
     graph[5].incident[4] = 10;
 
     Spanner sp;
-
+    SizeType waste = 0;
     std::cout << "Prim's MST:\n";
-    auto primTree = sp.primSpan(graph);
+    auto primTree = sp.primSpan(graph, waste);
     printGraph(primTree);
+    std::cout << "\nPrim's waste: " << waste << "\n\n";
 
+    waste = 0;
     std::cout << "Kruskal's MST:\n";
-    auto kruskalTree = sp.kruskalSpan(graph);
+    auto kruskalTree = sp.kruskalSpan(graph, waste);
     printGraph(kruskalTree);
+    std::cout << "\nKruskal's waste: " << waste << "\n\n";
 
     return 0;
 }

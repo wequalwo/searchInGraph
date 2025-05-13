@@ -125,10 +125,12 @@ void Spanner::clearComps(List<Set<SizeType>*>& comps)
 
 
 /////////////////////////////////
-// here is my try
+// here is try 2 (optimized)
 /////////////////////////////////
-List<WNode> Spanner::primSpan(const List<WNode>& graph)
+List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
 {
+    waste = 0;
+
     const SizeType n = graph.size();
     std::vector<bool> inTree(n, false);
     std::vector<double> minWeight(n, std::numeric_limits<double>::max());
@@ -152,6 +154,7 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph)
                 minWeight[v] = weight;
                 parent[v] = u;
                 pq.emplace(weight, v);
+                waste += 1;
             }
         }
     }
@@ -189,10 +192,9 @@ struct DSU {
     }
 };
 
-
-
-List<WNode> Spanner::kruskalSpan(const List<WNode>& graph)
+List<WNode> Spanner::kruskalSpan(const List<WNode>& graph, SizeType& waste)
 {
+    waste = 0;
     List<EdgeType> edges;
     Map<EdgeType, double> weights;
 
@@ -221,7 +223,10 @@ List<WNode> Spanner::kruskalSpan(const List<WNode>& graph)
             res[e.first].incident[e.second] = w;
             res[e.second].incident[e.first] = w;
         }
+        else
+        {
+            waste += 1;
+        }
     }
-
     return res;
 }
