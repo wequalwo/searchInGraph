@@ -1,7 +1,7 @@
 #include <chrono>
 
 #include "monte_carlo/monte_carlo_traversal.h"
-#include "traversal/traversal.h"
+#include "graph/traversal/traversal.h"
 
 void MonteCarloTraversal::clear() {
     m_graph.clear();

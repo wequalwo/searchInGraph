@@ -1,5 +1,4 @@
 .vscode/
-logger/*.
 a.exe
 tree.dot
 graph.dot
@@ -9,12 +8,10 @@ prufer_prod.exe
 prufer_prod_2.cpp
 tes.cpp
 histogram
-logger/err.txt
-logger/log.txt
 histogram.bin
 density/fulllog.txt
 C$$$LETI$$$0DMNIR4g++ -std=c++17 -g.txt
 analyse.ipynb
 build.bat
-logger/
+logs/*
 mainspan.exe

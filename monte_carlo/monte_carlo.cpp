@@ -2,7 +2,7 @@
 #include "graph/rand_graph.h"
 #include "prufer_graph/random_graph.h"
 #include "prufer_graph/prufer.h"
-#include "traversal/traversal.h"
+#include "graph/traversal/traversal.h"
 
 void MonteCarlo::initHilbert()
 {
@@ -55,5 +55,3 @@ void MonteCarlo::buildGraph(double density) {
         }
     }
 }
-
-

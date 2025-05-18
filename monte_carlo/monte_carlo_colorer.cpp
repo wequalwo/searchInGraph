@@ -37,7 +37,7 @@ void MonteCarloColorer::runMonteCarlo() {
             for (SizeType curColors = maxColorsToCheck; curColors >= minColorsToCheck; --curColors)
             {
                 bool foundColoring = false;
-                for (int searchIndex = 0; searchIndex < m_numRuns; ++searchIndex) {
+                for (int searchIndex = 0; searchIndex < m_numRuns; ++searchIndex)
                     if (colorer.randColoring(m_graph, curColors))
                     {
                         m_tries.push_back(++searchIndex);
@@ -46,7 +46,6 @@ void MonteCarloColorer::runMonteCarlo() {
                     }
                 if (!foundColoring)
                     m_tries.push_back(0);
-                }
             }
             logResults();
             avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
@@ -64,6 +63,13 @@ void MonteCarloColorer::runMonteCarlo() {
         }
         std::cerr << "\n";
     }
+}
+
+void MonteCarloColorer::clear() {
+    m_graph.clear();
+    m_tries.clear();
+    m_greedyColors = 0;
+    m_naiveColors = 0;
 }
 
 // Логирование результатов

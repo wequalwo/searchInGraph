@@ -4,7 +4,7 @@
 #include "graph/rand_graph.h"
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
-#include "tree/spanning_tree.h"
+#include "graph/tree/spanning_tree.h"
 #include "graph/rand_weight.h"
 
 void MonteCarloTrees::clear() {
