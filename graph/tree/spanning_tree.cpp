@@ -140,16 +140,17 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
     std::priority_queue<PQItem, std::vector<PQItem>, std::greater<>> pq;
 
     minWeight[0] = 0;
+
     pq.emplace(0, 0); // (weight, vertex)
 
     while (!pq.empty()) {
         SizeType u = pq.top().second;
         pq.pop();
-
         if (inTree[u]) continue;
         inTree[u] = true;
 
         for (const auto& [v, weight] : graph[u].incident) {
+
             if (!inTree[v] && weight < minWeight[v]) {
                 minWeight[v] = weight;
                 parent[v] = u;
@@ -160,6 +161,7 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
     }
 
     List<WNode> res;
+
     for (SizeType i = 0; i < n; ++i)
         res.push_back(WNode{i, Map<SizeType, double>{}});
 
