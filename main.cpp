@@ -2,8 +2,11 @@
 #include <string>   // Для std::stod
 #include <thread>
 
-#include "logger/logger.h"
-#include "monte_carlo/monte_carlo.h"
+#include "logger/traversal_logger.h"
+#include "logger/spanning_logger.h"
+
+#include "monte_carlo/monte_carlo_traversal.h"
+#include "monte_carlo/monte_carlo_trees.h"
 
 void print_usage(const std::string& path)
 {
@@ -50,7 +53,7 @@ int main(int argc, char *argv[])
     }
 
     std::string mod = argv[argIdx];
-    std::string log = "logger/log", err = "logger/err";
+    std::string log = "logs/log", err = "logs/err";
     if (!(mod == "-er" || mod == "-h"))
     {
         print_usage(argv[0]);
