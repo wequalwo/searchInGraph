@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <unordered_set>
 #include <unordered_map>
-#include <cstdint>
 #include <iostream>
 
 #define MIN_INVERSE_DENSITY 0.5

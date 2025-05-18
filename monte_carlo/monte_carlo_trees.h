@@ -1,7 +1,10 @@
 #pragma once
+#ifndef MONTE_CARLO_TREES
+#define MONTE_CARLO_TREES
 
 #include "monte_carlo/monte_carlo.h"
 #include "logger/spanning_logger.h"
+#include "graph/tree/spanning_tree.h"
 
 class MonteCarloTrees : public MonteCarlo {
 public:
@@ -27,3 +30,5 @@ private:
     List<WNode> enrichmentGraph();
     void logResults() override;
 };
+
+#endif // MONTE_CARLO_TREES
