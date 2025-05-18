@@ -16,28 +16,14 @@ public:
     Logger(const Logger& other) = delete;
     Logger(Logger&& other) = default;
     ~Logger();
-
+    
+    void logErrGraph(const List<Node>& graph);
+    void errBuild(const std::string& errTxt, SizeType graphSize, double density);
+    void errConnectionCheck(SizeType graphSize, double density);
 
 protected:
     std::ofstream m_log;
     std::ofstream m_err;
-};
-
-class TraversalLogger : public Logger
-{
-public:
-    TraversalLogger(const std::string& log, const std::string& err, SizeType threadIdx)
-        : Logger(log, err, threadIdx)
-    {};
-
-    TraversalLogger(const TraversalLogger& other) = delete;
-    TraversalLogger(TraversalLogger&& other) = default;
-
-    void errSearch(const std::string& errTxt, SizeType graphSize, double density, SizeType from, SizeType to,
-                   const std::string& searchType);
-    void logErrGraph(const List<Node>& graph);
-    void errBuild(const std::string& errTxt, SizeType graphSize, double density);
-    void log(SizeType graphSize, double density, SizeType dist, SizeType bfs, SizeType dfs);
 };
 
 

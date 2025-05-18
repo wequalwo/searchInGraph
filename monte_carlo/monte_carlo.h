@@ -3,9 +3,8 @@
 #define MONTE_CARLO_H
 
 #include <memory>
+
 #include "common/common.h"
-#include "graph/tree/rand_tree.h"
-#include "graph/traversal/traversal.h"
 #include "logger/logger.h"
 
 class MonteCarlo
@@ -22,7 +21,10 @@ public:
     virtual void runMonteCarlo() = 0;
     virtual void clear() = 0;
 protected:
-    virtual void logResults(int graphIndex, double density, int runIndex) = 0;
+    // Метод для построения графа
+    void buildGraph(double density);
+
+    virtual void logResults() = 0;
 
     int m_numGraphs;                      // Количество графов
     int m_numVertices;                    // Количество вершин в графе
@@ -36,7 +38,10 @@ protected:
     };
 
     List<double> m_densities;
+    double m_curDensity;
+
     GraphType m_graphType;
+    List<Node> m_graph;
 
     std::unique_ptr<Logger> m_pLogger;
 };

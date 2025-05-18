@@ -1,9 +1,7 @@
-#include "monte_carlo.h"
-#include "monte_carlo_traversal.h"
-#include "graph/rand_graph.h"
-#include "prufer_graph/prufer.h"
-#include "prufer_graph/random_graph.h"
 #include <chrono>
+
+#include "monte_carlo/monte_carlo_traversal.h"
+#include "traversal/traversal.h"
 
 void MonteCarloTraversal::clear() {
     m_graph.clear();
@@ -34,7 +32,6 @@ void MonteCarloTraversal::runMonteCarlo() {
     Clock::time_point persearch = begin;
     float avg = 0;
     //Clock::time_point end = iter;
-    double logDenisty;
 
     for (double curDensity : m_densities)
     {
@@ -43,52 +40,15 @@ void MonteCarloTraversal::runMonteCarlo() {
         avg = 0;
         for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex)
         {
-            // TODO разделить методы: надо получать не только эти данные
-            if (m_graphType == GraphType::eErdosRenyi)
-            {
-                try
-                {
-                    m_graph = buildGraph(curDensity);
-                    logDenisty = curDensity;
-                }
-                catch (std::exception& exc)
-                {
-                    static_cast<TraversalLogger*>(m_pLogger.get())->errBuild(exc.what(), m_numVertices, curDensity);
-                }
-            }
-            else if (m_graphType == GraphType::eHilbert)
-            {
-                bool isConnected = false;
-                int edgesNum;
-                while (!isConnected)
-                {
-                    try
-                    {
-                        m_graph = hilbert_graph(m_numVertices, curDensity, edgesNum);
-                        logDenisty = double(2*edgesNum)/(m_numVertices*(m_numVertices-1));
-                    }
-                    catch (std::exception& exc)
-                    {
-                        static_cast<TraversalLogger*>(m_pLogger.get())->errBuild(exc.what(), m_numVertices, curDensity);
-                    }
-                    try
-                    {
-                        isConnected = Traverser::checkConnected(m_graph);
-                    }
-                    catch (std::exception& exc)
-                    {
-                        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, logDenisty, 0, 0, "connected check");
-                    }
-                }
-            }                
-                
+            buildGraph(curDensity);
+
             persearch = Clock::now();
             for (int searchIndex = 0; searchIndex < m_numRuns; ++searchIndex) {
                 // Выполняем поиск пути и обновляем результаты
-                searchPath(logDenisty);
+                searchPath();
 
                 // Логируем результаты после каждого поиска
-                logResults(graphIndex, logDenisty, searchIndex);
+                logResults();
             }
             avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
             if ((graphIndex + 1) % 100 == 0) {
@@ -107,19 +67,8 @@ void MonteCarloTraversal::runMonteCarlo() {
     }
 }
 
-List<Node> MonteCarloTraversal::buildGraph(double density) {
-
-    // TODO : переделать на вызов наиболее оптимального метода
-    //List<Node> nodes = get_tree(numEdges);
-
-    List<Node> nodes = transform(prufer_unpack(prufer_gen(m_numVertices), m_numVertices), m_numVertices);
-    setGraphDensity(nodes, density);
-
-    return nodes;
-}
-
 // Поиск пути на графе (в текущем графе)
-void MonteCarloTraversal::searchPath(double curDensity, bool auto_inv) {
+void MonteCarloTraversal::searchPath(bool auto_inv) {
 
     Randomizer rand;
     Traverser traverser(&m_graph, auto_inv);
@@ -132,30 +81,30 @@ void MonteCarloTraversal::searchPath(double curDensity, bool auto_inv) {
 
     try
     {
-        traverser.traverse<std::queue<SizeType>>(from, to, curDensity);  // BFS
+        traverser.traverse<std::queue<SizeType>>(from, to, m_curDensity);  // BFS
         m_bfsResults.push_back(traverser.getTraverseOrder().size());
         m_dist.push_back(traverser.getPath().size() - 1); // -1, чтобы не учитывать первую вершину
         traverser.clear();
     }
     catch (std::exception& exc)
     {
-        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, curDensity, from, to, "BFS");
+        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, m_curDensity, from, to, "BFS");
         static_cast<TraversalLogger*>(m_pLogger.get())->logErrGraph(m_graph);
     }
     try
     {
-        traverser.traverse<std::stack<SizeType>>(from, to, curDensity);  // DFS
+        traverser.traverse<std::stack<SizeType>>(from, to, m_curDensity);  // DFS
         m_dfsResults.push_back(traverser.getTraverseOrder().size());
     }
     catch (std::exception& exc)
     {
-        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, curDensity, from, to, "DFS");
+        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, m_curDensity, from, to, "DFS");
         static_cast<TraversalLogger*>(m_pLogger.get())->logErrGraph(m_graph);
     }
 }
 
 // Логирование результатов
-void MonteCarloTraversal::logResults(int graphIndex, double density, int searchIndex) {
-    static_cast<TraversalLogger*>(m_pLogger.get())->log(m_graph.size(), density, m_dist.back(), getBFSResults().back(), getDFSResults().back());
-    // TODO правильное логирование с ипользование геттеров
+void MonteCarloTraversal::logResults() {
+    static_cast<TraversalLogger*>(m_pLogger.get())->log(m_graph.size(), m_curDensity, m_dist.back(),
+                                                        getBFSResults().back(), getDFSResults().back());
 }

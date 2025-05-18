@@ -3,8 +3,7 @@
 #define MONTE_CARLO_TRAVERSAL_H
 
 #include "monte_carlo/monte_carlo.h"
-#include "monte_carlo_traversal.h"
-
+#include "logger/traversal_logger.h"
 
 class MonteCarloTraversal : public MonteCarlo
 {
@@ -26,16 +25,13 @@ public:
     const List<int>& getDFSResults() const;
 
 private:
-    // Метод для построения графа
-    List<Node> buildGraph(double density);
-
     // Метод для выполнения поиска пути на графе
-    void searchPath(double curDensity, bool auto_inv = true);
+    void searchPath(bool auto_inv = true);
 
     // логирование результатов
-    void logResults(int graphIndex, double density, int searchIndex);
+    void logResults() override;
 
-    List<Node> m_graph;            // Граф
+
     List<int> m_bfsResults;        // Результаты поиска в ширину
     List<int> m_dfsResults;        // Результаты поиска в глубину
     List<int> m_dist;              // Геодезическое расстояние

@@ -30,14 +30,7 @@ Logger::~Logger()
     m_err.close();
 }
 
-void TraversalLogger::errSearch(const std::string& errTxt, SizeType graphSize, double density, SizeType from, SizeType to,
-                       const std::string& searchType)
-{
-    m_err << "Error while " << searchType << " searching graph on " << graphSize
-          << " vertices from " << from << " to " << to << " with density " << density << ": " << errTxt << std::endl;
-}
-
-void TraversalLogger::logErrGraph(const List<Node>& graph)
+void Logger::logErrGraph(const List<Node>& graph)
 {
     m_err << "graph representaion: <n = num of incident verts> <v1> <v2> ... <vn>" << std::endl;
     for (const Node& node : graph)
@@ -49,14 +42,15 @@ void TraversalLogger::logErrGraph(const List<Node>& graph)
     }
 }
 
-void TraversalLogger::errBuild(const std::string& errTxt, SizeType graphSize, double density)
+void Logger::errBuild(const std::string& errTxt, SizeType graphSize, double density)
 {
     m_err << "Error while building graph on " << graphSize
           << " vertices with density " << density << ": " << errTxt << std::endl;
 }
 
-void TraversalLogger::log(SizeType graphSize, double density, SizeType dist, SizeType bfs, SizeType dfs)
+void Logger::errConnectionCheck(SizeType graphSize, double density)
 {
-    // пока лог упоротый, но зато отдельные части независимы
-    m_log << graphSize << ' ' << density << ' ' << dist << ' ' << bfs << ' ' << dfs << std::endl;
+    m_err << "Error while checking connectedness of graph on " << graphSize
+          << " vertices with density " << density << std::endl;
 }
+

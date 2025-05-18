@@ -1,11 +1,11 @@
-#include "monte_carlo.h"
-#include "monte_carlo_trees.h"
+#include <chrono>
+
+#include "monte_carlo/monte_carlo_trees.h"
 #include "graph/rand_graph.h"
 #include "prufer_graph/prufer.h"
 #include "prufer_graph/random_graph.h"
-#include "rand_weight.h"
-#include <chrono>
-#include <tree/spanning_tree.h>
+#include "tree/spanning_tree.h"
+#include "graph/rand_weight.h"
 
 void MonteCarloTrees::clear() {
     m_wgraph.clear();
@@ -13,11 +13,11 @@ void MonteCarloTrees::clear() {
     m_kruskalSpanResults.clear();
 }
 
-const List<int>& MonteCarloTrees::getPrimSpanResults() const {
+const List<uint32_t>& MonteCarloTrees::getPrimSpanResults() const {
     return m_primSpanResults;
 }
 
-const List<int>& MonteCarloTrees::getKruskalSpanResults() const {
+const List<uint32_t>& MonteCarloTrees::getKruskalSpanResults() const {
     return m_kruskalSpanResults;
 }
 
@@ -40,18 +40,6 @@ List<WNode> toWeighted(const List<Node>& nodes, double defaultWeight = 1.0) {
     }
 
     return weightedNodes;
-}
-// TODO:
-//i bet we should move this method to the base class
-List<Node> MonteCarloTrees::buildGraph(double density) {
-
-    // TODO : переделать на вызов наиболее оптимального метода
-    //List<Node> nodes = get_tree(numEdges);
-
-    List<Node> nodes = transform(prufer_unpack(prufer_gen(m_numVertices), m_numVertices), m_numVertices);
-    setGraphDensity(nodes, density);
-
-    return nodes;
 }
 
 
@@ -79,25 +67,32 @@ List<WNode> MonteCarloTrees::enrichmentGraph() {
 }
 
 // Логирование результатов
-void MonteCarloTrees::logResults(int graphIndex, double density, int trialIndex) {
-    static_cast<TraversalLogger*>(m_pLogger.get())->log(m_wgraph.size(), density, trialIndex, getKruskalSpanResults().back(), getPrimSpanResults().back());
+void MonteCarloTrees::logResults() {
+    static_cast<SpanningLogger*>(m_pLogger.get())->log(m_wgraph.size(), m_curDensity, getKruskalSpanResults().back(), getPrimSpanResults().back());
 }
 
 void MonteCarloTrees::makeTree() {
     try {
         m_wgraph = enrichmentGraph(); 
-        // TODO: make recalculation of weights
-        // instead of recalculating the whole graph
-
-        SizeType wastePrim = 0, wasteKruskal = 0;
+    }
+    catch (const std::exception& e) {
+        static_cast<SpanningLogger*>(m_pLogger.get())->errSpanning(e.what(), m_numVertices, m_curDensity, "enrich");
+    }
+    SizeType wastePrim = 0, wasteKruskal = 0;
+    try {
+        
         m_spanner.primSpan(m_wgraph, wastePrim);
         m_primSpanResults.push_back(wastePrim);                
-
+    }
+    catch (const std::exception& e) {
+        static_cast<SpanningLogger*>(m_pLogger.get())->errSpanning(e.what(), m_numVertices, m_curDensity, "prim");
+    }
+    try {
         m_spanner.kruskalSpan(m_wgraph, wasteKruskal); 
         m_kruskalSpanResults.push_back(wasteKruskal);
     }
     catch (const std::exception& e) {
-        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(e.what(), m_numVertices, 0, 0, 0, "makeTree");
+        static_cast<SpanningLogger*>(m_pLogger.get())->errSpanning(e.what(), m_numVertices, m_curDensity, "prim");
     }
 }
 
@@ -124,50 +119,13 @@ void MonteCarloTrees::runMonteCarlo() {
         avg = 0;
         for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex)
         {
-            // TODO разделить методы: надо получать не только эти данные
-            if (m_graphType == GraphType::eErdosRenyi)
-            {
-                try
-                {
-                    m_graph = buildGraph(curDensity);
-                    logDenisty = curDensity;
-                }
-                catch (std::exception& exc)
-                {
-                    static_cast<TraversalLogger*>(m_pLogger.get())->errBuild(exc.what(), m_numVertices, curDensity);
-                }
-            }
-            else if (m_graphType == GraphType::eHilbert)
-            {
-                bool isConnected = false;
-                int edgesNum;
-                while (!isConnected)
-                {
-                    try
-                    {
-                        m_graph = hilbert_graph(m_numVertices, curDensity, edgesNum);
-                        logDenisty = double(2*edgesNum)/(m_numVertices*(m_numVertices-1));
-                    }
-                    catch (std::exception& exc)
-                    {
-                        static_cast<TraversalLogger*>(m_pLogger.get())->errBuild(exc.what(), m_numVertices, curDensity);
-                    }
-                    try
-                    {
-                        isConnected = Traverser::checkConnected(m_graph);
-                    }
-                    catch (std::exception& exc)
-                    {
-                        static_cast<TraversalLogger*>(m_pLogger.get())->errSearch(exc.what(), m_numVertices, logDenisty, 0, 0, "connected check");
-                    }
-                }
-            }                
+            buildGraph(curDensity);           
             persearch = Clock::now();
             for (int trialIndex = 0; trialIndex < m_numRuns; ++trialIndex) {
 
                 makeTree(); // здесь зашито обогащение графа весами!
 
-                logResults(graphIndex, logDenisty, trialIndex);
+                logResults();
             }
             avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
             if ((graphIndex + 1) % 100 == 0) {
