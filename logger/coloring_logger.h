@@ -15,7 +15,7 @@ public:
     ColoringLogger(ColoringLogger&& other) = default;
 
     void errColoring(const std::string& errTxt, SizeType graphSize, double density, const std::string& coloring);
-    void log(SizeType graphSize, double density, SizeType naive, SizeType greedy, const List<uint32_t>& tries);
+    void log(SizeType graphSize, double density, SizeType naive, SizeType greedy);
 };
 
 #endif // COLORING_LOGGER_H
