@@ -4,7 +4,7 @@
 #include "randomizer/rand.h"
 
 // independent distributed weights
-List<double> normal_weights(double mean, double dev, SizeType count)
+List<double> normal_weights(double mean, double dev, int count)
 {
     List<double> res;
     Randomizer rand;
@@ -13,6 +13,24 @@ List<double> normal_weights(double mean, double dev, SizeType count)
         res.push_back(rand.randNorm(mean, dev));
 
     return res;
+}
+
+
+List<double> uniform_weights(double min, double max, int count)
+{
+    List<double> res;
+    Randomizer rand;
+    res.reserve(count);
+    for (SizeType i = 0; i < count; ++i)
+        res.push_back(rand.uniformRand(min, max)); //rand.randNorm(mean, dev));
+
+    return res;
+}
+
+
+List<double> ones_weights(int count)
+{
+    return List<double>(count, 1.0);
 }
 
 // weights in range: [min, min + 1, ..., max - 1, max]
@@ -50,5 +68,35 @@ List<double> sample_weights(const List<double>& weights, SizeType count)
         res.push_back(weights[rand.uRand(0, weights.size() - 1)]);
     return res;
 }
+
+List<double> sample_bernulli(double p, uint32_t count)
+{
+    List<double> res;
+    Randomizer rand;
+    res.reserve(count);
+    for (SizeType i = 0; i < count; ++i)
+    {
+        if(rand.uniformRand(0, 1) < p)
+            res.push_back(1);
+        else
+            res.push_back(0.5);
+    }
+    return res;
+}
+
+List<double> sample_binomial(double p, int n, uint32_t count)
+{
+    std::mt19937 gen(1729);
+    std::binomial_distribution<> distr(n, p);
+    
+    List<double> res;
+    Randomizer rand;
+    res.reserve(count);
+
+    for (SizeType i = 0; i < count; ++i)
+        res.push_back(distr(gen));
+    return res;
+}
+
 
 #endif // GRAPH_RAND_WEIGHT_H

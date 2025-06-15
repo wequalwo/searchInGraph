@@ -11,7 +11,7 @@ void MonteCarlo::initHilbert()
 
 void MonteCarlo::initErdosRenyi()
 {
-    m_graphType = GraphType::eHilbert;
+    m_graphType = GraphType::eErdosRenyi;
 }
 
 void MonteCarlo::buildGraph(double density) {

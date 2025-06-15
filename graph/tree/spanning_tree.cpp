@@ -35,8 +35,9 @@ List<WNode> Spanner::pSpan(const List<WNode>& graph) // Prim algorithm
     return res;
 } 
 
-List<WNode> Spanner::kSpan(const List<WNode>& graph) // Kruskal algorithm
+List<WNode> Spanner::naiveKruskalSpan(const List<WNode>& graph, unsigned int& waste) // Kruskal algorithm
 {
+    waste = 0;
     List<EdgeType> edges;
     Map<EdgeType, double> weights;
 
@@ -64,20 +65,70 @@ List<WNode> Spanner::kSpan(const List<WNode>& graph) // Kruskal algorithm
         
     // starting from cheapest edge
     for (const auto& edge : edges)
+    {
         // if vertices are in different components
+        waste++;
         if (comps[edge.first] != comps[edge.second])
         {
-            mergeComps(comps, edge.first, edge.second);
+            mergeComps(comps, edge.first, edge.second, waste);
             res[edge.first].incident[edge.second] = weights[edge];
             res[edge.second].incident[edge.first] = weights[edge];
             // if graph became connected
             if (comps[edge.first]->size() == graph.size())
                 break;
         }
+    }
     clearComps(comps);
     
     return res;
 }
+
+
+// List<WNode> Spanner::naiveKruskalSpan(const List<WNode>& graph, unsigned int& waste) {
+//     const int p = graph.size();
+//     List<WNode> T;
+//     std::vector<int> components(p);
+
+//     // Инициализация компонент связности
+//     for (int i = 0; i < p; ++i)
+//         components[i] = i;
+
+//     waste = 0;
+//     int k = 0; // номер рассматриваемого ребра
+
+//     // Внешний цикл for (как в псевдокоде)
+//     for (int i = 0; i < p - 1; ++i) {
+//         // Внутренний цикл while (как в псевдокоде)
+//         // Проверяем, создает ли добавление ребра цикл (z(T + E[k]) > 0)
+//         while (k < graph.size() && components[graph[k].data] == components[graph[k].incident.begin()->first]) {
+//             ++waste;
+//             ++k; // пропустить это ребро
+//         }
+
+//         // Если прошли все ребра, но не нашли MST
+//         if (k >= graph.size()) {
+//             break;
+//         }
+
+//         // Добавить ребро в MST
+//         const WNode& edge = graph[k];
+//         T.push_back(edge);
+
+//         // Объединить компоненты
+//         int u_comp = components[edge.data];
+//         int v_comp = components[edge.incident.begin()->first];
+//         for (int j = 0; j < p; ++j) {
+//             if (components[j] == v_comp) {
+//                 components[j] = u_comp;
+//             }
+//         }
+
+//         ++k; // перейти к следующему ребру
+//     }
+
+//     return T;
+// }
+
 
 
 void Spanner::initComps(List<Set<SizeType>*>& comps, SizeType size)
@@ -86,7 +137,7 @@ void Spanner::initComps(List<Set<SizeType>*>& comps, SizeType size)
         comps.push_back(new Set<SizeType>{i});
 }
 
-void Spanner::mergeComps(List<Set<SizeType>*>& comps, SizeType first, SizeType second)
+void Spanner::mergeComps(List<Set<SizeType>*>& comps, SizeType first, SizeType second, unsigned int& waste)
 {
     if (first > second)
         std::swap(first, second);
@@ -98,9 +149,11 @@ void Spanner::mergeComps(List<Set<SizeType>*>& comps, SizeType first, SizeType s
     Set<SizeType>* pToDelete = comps[second];
     // all nodes in component 2 now belong to component 1
     for (auto& pComp : comps)
+    {
+        //waste+=1;
         if (pComp == pToDelete)
             pComp = comps[first];
-
+    }
     // delete component 2
     delete pToDelete;
 }
@@ -127,9 +180,68 @@ void Spanner::clearComps(List<Set<SizeType>*>& comps)
 /////////////////////////////////
 // here is try 2 (optimized)
 /////////////////////////////////
+// List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
+// {
+//     waste = 0;
+
+//     const SizeType n = graph.size();
+//     std::vector<bool> inTree(n, false);
+//     std::vector<double> minWeight(n, std::numeric_limits<double>::max());
+//     std::vector<SizeType> parent(n, -1);
+
+//     using PQItem = std::pair<double, SizeType>; // (weight, vertex)
+//     std::priority_queue<PQItem, std::vector<PQItem>, std::greater<>> pq;
+
+//     minWeight[0] = 0;
+
+//     pq.emplace(0, 0); // (weight, vertex)
+
+//     while (!pq.empty()) {
+//         SizeType u = pq.top().second;
+//         pq.pop();
+//         if (inTree[u]) {
+//             //waste++;  // Увеличиваем waste, если вершина уже в остове
+//             continue;
+//         }
+//         inTree[u] = true;
+
+//         for (const auto& [v, weight] : graph[u].incident) {
+
+//             if (!inTree[v] && weight < minWeight[v]) {
+//                 minWeight[v] = weight;
+//                 parent[v] = u;
+//                 pq.emplace(weight, v);            
+//             }
+//             else
+//             {
+//                 waste++;
+//             }
+//         }
+//     }
+
+//     List<WNode> res;
+
+//     for (SizeType i = 0; i < n; ++i)
+//         res.push_back(WNode{i, Map<SizeType, double>{}});
+
+//     for (SizeType v = 1; v < n; ++v) {
+//         SizeType u = parent[v];
+//         double w = graph[u].incident.at(v);
+//         res[u].incident[v] = w;
+//         res[v].incident[u] = w;
+//     }
+
+//     return res;
+// }
+
+
+//#################################### new version
+static constexpr SizeType WASTE_MULTIPLIER = 1000000; // 1 million
+
 List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
 {
-    waste = 0;
+    SizeType addedEdges = 0;
+    SizeType checkedEdges = 0;
 
     const SizeType n = graph.size();
     std::vector<bool> inTree(n, false);
@@ -140,8 +252,7 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
     std::priority_queue<PQItem, std::vector<PQItem>, std::greater<>> pq;
 
     minWeight[0] = 0;
-
-    pq.emplace(0, 0); // (weight, vertex)
+    pq.emplace(0, 0);
 
     while (!pq.empty()) {
         SizeType u = pq.top().second;
@@ -150,18 +261,21 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
         inTree[u] = true;
 
         for (const auto& [v, weight] : graph[u].incident) {
-
-            if (!inTree[v] && weight < minWeight[v]) {
-                minWeight[v] = weight;
-                parent[v] = u;
-                pq.emplace(weight, v);
-                waste += 1;
+            if(!inTree[v]) {
+                checkedEdges++;
+                if (weight < minWeight[v]) {
+                    minWeight[v] = weight;
+                    parent[v] = u;
+                    pq.emplace(weight, v);
+                    addedEdges++;
+                }
             }
         }
     }
 
-    List<WNode> res;
+    waste = checkedEdges;//(checkedEdges == 0) ? 0 : static_cast<SizeType>((addedEdges * WASTE_MULTIPLIER) / checkedEdges);
 
+    List<WNode> res;
     for (SizeType i = 0; i < n; ++i)
         res.push_back(WNode{i, Map<SizeType, double>{}});
 
@@ -174,6 +288,86 @@ List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
 
     return res;
 }
+
+
+List<WNode> Spanner::naivePrimSpan(const List<WNode>& graph, unsigned int& waste)
+{
+    waste  = 0;
+    const SizeType p = graph.size();
+    List<WNode> T;
+    for (SizeType i = 0; i < p; ++i)
+        T.push_back(WNode{i, Map<SizeType, double>{}});
+
+
+    std::vector<double> beta(p, std::numeric_limits<double>::infinity());
+    std::vector<int> alpha(p, -1); // -1 значит неопределено
+    std::vector<bool> S(p, false);   // S — множество включённых вершин
+
+    auto u = graph[0];
+    S[0] = true;
+
+    for (auto& v: graph)
+    {
+        if(v.data == u.data)
+        {
+            continue;
+        }
+        waste++;
+        if (graph[u.data].incident.count(v.data))
+        {
+            alpha[v.data] = u.data;
+            beta[v.data] = u.incident[v.data]; 
+        }
+        else
+        {
+            alpha[v.data] = -1;
+            beta[v.data] = std::numeric_limits<double>::infinity();
+        }
+    }
+    // второй цикл
+    auto w = u;// костыльчик
+
+    for (int i = 0;  i < p - 1; i++)
+    {
+        double x = std::numeric_limits<double>::infinity();
+        for (auto &v : graph)
+        {
+            if (S[v.data])
+                continue;
+
+            waste++;
+            if (beta[v.data] < x)
+            {
+                w = v;
+                x = beta[v.data];
+            }
+        }
+        S[w.data] = true;
+
+        // обогащение дерева
+        T[w.data].incident[alpha[w.data]] = x;
+        T[alpha[w.data]].incident[w.data] = x;
+
+        for (auto &v: w.incident)
+        {
+            waste++;
+            if (S[v.first])
+                continue;
+            waste++;
+            if (beta[v.first] > v.second)
+            {
+                alpha[v.first] = w.data;
+                beta[v.first] = v.second;
+            }
+        }
+    }
+    return T;
+}
+
+
+//#################################################
+
+
 
 
 // using direct DSU: 
@@ -194,9 +388,47 @@ struct DSU {
     }
 };
 
-List<WNode> Spanner::kruskalSpan(const List<WNode>& graph, SizeType& waste)
+// List<WNode> Spanner::kruskalSpan(const List<WNode>& graph, SizeType& waste)
+// {
+//     waste = 0;
+//     List<EdgeType> edges;
+//     Map<EdgeType, double> weights;
+
+//     for (const auto& node : graph) {
+//         for (const auto& [v, w] : node.incident) {
+//             if (node.data < v) {
+//                 EdgeType e{node.data, v};
+//                 edges.push_back(e);
+//                 weights[e] = w;
+//             }
+//         }
+//     }
+
+//     std::sort(edges.begin(), edges.end(), [&weights](const EdgeType& a, const EdgeType& b) {
+//         return weights[a] < weights[b];
+//     });
+
+//     List<WNode> res;
+//     for (SizeType i = 0; i < graph.size(); ++i)
+//         res.push_back(WNode{i, Map<SizeType, double>{}});
+
+//     DSU dsu(graph.size());
+//     for (const auto& e : edges) {
+//         if (dsu.merge(e.first, e.second)) {
+//             double w = weights[e];
+//             res[e.first].incident[e.second] = w;
+//             res[e.second].incident[e.first] = w;
+//         }
+//         else
+//         {
+//             waste += 1;
+//         }
+//     }
+//     return res;
+// }
+
+List<WNode> Spanner::kruskalSpan(const List<WNode>& graph, unsigned int& waste)
 {
-    waste = 0;
     List<EdgeType> edges;
     Map<EdgeType, double> weights;
 
@@ -219,16 +451,27 @@ List<WNode> Spanner::kruskalSpan(const List<WNode>& graph, SizeType& waste)
         res.push_back(WNode{i, Map<SizeType, double>{}});
 
     DSU dsu(graph.size());
+
+    SizeType addedEdges = 0;
+    SizeType checkedEdges = edges.size();
+
+    for (const auto& e : edges) {
+        if (dsu.merge(e.first, e.second)) {
+            addedEdges++;
+        }
+    }
+
+    waste = checkedEdges;//(checkedEdges == 0) ? 0 : static_cast<SizeType>((addedEdges * WASTE_MULTIPLIER) / checkedEdges);
+
+    dsu = DSU(graph.size());
+
     for (const auto& e : edges) {
         if (dsu.merge(e.first, e.second)) {
             double w = weights[e];
             res[e.first].incident[e.second] = w;
             res[e.second].incident[e.first] = w;
         }
-        else
-        {
-            waste += 1;
-        }
     }
+
     return res;
 }

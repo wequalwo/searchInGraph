@@ -86,42 +86,96 @@ List<Node> hilbert_graph(SizeType size, double pi, int& num_edges)
                 graph[j].incident.insert(i);
                 ++num_edges;
             }
-
+    std::cout << "number of edges: " << num_edges << '\n';
+    std::cout << "density: " << double(num_edges) / (size * (size - 1) / 2) << '\n';
     return graph;
 }
 
 // distribute weignts among edges in random order
+// List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
+// {
+//     int edges = 0;
+//     for (const auto& node : graph)
+//         edges += node.incident.size();
+//     if (edges / 2 != weights.size())
+//     {
+//         std::cout << "edges: " << edges/2 << " weights: " << weights.size() <<'\n';
+//         throw std::logic_error("invalid weights number");
+//     }
+    
+//     List<unsigned int> edgesInds;
+//     for (const auto& node : graph)
+//     {
+//         for (const auto& adjNode : node.incident)
+//             if (node.data < graph[adjNode].data)
+//                 edgesInds.push_back(index_from_pair(graph.size(), node.data, graph[adjNode].data));
+//     }
+//     if (edgesInds.size() != weights.size())
+//         throw std::logic_error("invalid weights number");
+
+//     Randomizer rand;
+//     List<double> copyWeights(weights);
+//     rand.shuffle(copyWeights);
+
+//     List<WNode> wGraph;
+//     for (SizeType i = 0; i < graph.size(); ++i)
+//         wGraph.push_back(WNode(i, Map<SizeType, double>{}));
+//     //std::cout << "3\n";
+
+//     for (SizeType i = 0; i < edgesInds.size(); ++i)
+//     {
+//         auto edgePair = pair_from_index(edgesInds.at(i), graph.size());
+//         //std::cout << "3.2\n";
+//         try{
+//             wGraph.at(edgePair.first).incident[edgePair.second] = copyWeights.at(i);
+//             wGraph.at(edgePair.second).incident[edgePair.first] = copyWeights.at(i);
+//         }
+//         catch (std::out_of_range& e)
+//         {
+//             std::cerr << "ERROR: " << e.what() << '\n';
+//             std::cout << edgesInds.at(i) << '\n';
+//             exit(1);
+//         }
+//     }
+//     //std::cout << "4\n";
+
+//     return wGraph;
+// }
+
 List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
 {
-    int edges = 0;
-    for (const auto& node : graph)
-        edges += node.incident.size();
-    if (edges / 2 != weights.size())
-        throw std::logic_error("invalid weights number");
-
-    List<unsigned int> edgesInds;
-    for (const auto& node : graph)
+    int expected_num_edges = 0;
+    for (SizeType i = 0; i < graph.size(); ++i)
     {
-        for (const auto& adjNode : node.incident)
-            if (node.data < graph[adjNode].data)
-                edgesInds.push_back(index_from_pair(graph.size(), node.data, graph[adjNode].data));
+        for (SizeType j : graph[i].incident)
+            if (i < j)
+                ++expected_num_edges;
     }
-    if (edgesInds.size() != weights.size())
-        throw std::logic_error("invalid weights number");
 
-    Randomizer rand;
-    List<double> copyWeights(weights);
-    rand.shuffle(copyWeights);
+    if (expected_num_edges != weights.size())
+    {
+        std::cout << "Expected edges: " << expected_num_edges << ", but got weights: " << weights.size() << '\n';
+        throw std::logic_error("Mismatch between number of edges and weights");
+    }
 
+    // Создаем пустой взвешенный граф
     List<WNode> wGraph;
     for (SizeType i = 0; i < graph.size(); ++i)
         wGraph.push_back(WNode(i, Map<SizeType, double>{}));
 
-    for (SizeType i = 0; i < edgesInds.size(); ++i)
+    // Присваиваем веса
+    SizeType weightIdx = 0;
+    for (SizeType i = 0; i < graph.size(); ++i)
     {
-        auto edgePair = pair_from_index(edgesInds[i], graph.size());
-        wGraph[edgePair.first].incident[edgePair.second] = copyWeights[i];
-        wGraph[edgePair.second].incident[edgePair.first] = copyWeights[i];
+        for (SizeType j : graph[i].incident)
+        {
+            if (i < j)
+            {
+                double weight = weights[weightIdx++];
+                wGraph[i].incident[j] = weight;
+                wGraph[j].incident[i] = weight;
+            }
+        }
     }
 
     return wGraph;

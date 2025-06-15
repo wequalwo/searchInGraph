@@ -91,7 +91,7 @@ EdgeType pair_from_index(SizeType index, SizeType n)
     return {a, b};
 }
 
-unsigned int index_from_pair(SizeType graphSize, SizeType first, SizeType second)
+SizeType index_from_pair(SizeType graphSize, SizeType first, SizeType second)
 {
     assert (first < second);
     return (first - 1) * (2 * graphSize - first) / 2 + (second - first - 1);

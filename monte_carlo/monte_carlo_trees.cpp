@@ -45,14 +45,14 @@ List<WNode> toWeighted(const List<Node>& nodes, double defaultWeight = 1.0) {
 
 List<WNode> MonteCarloTrees::enrichmentGraph() {
 
-    SizeType edgeCount = 0;
+    int edgeCount = 0;
     for (const auto& node : m_graph) {
         edgeCount += node.incident.size();
     }
     edgeCount /= 2;
-
-    List<double> weights = normal_weights(10.0, 2.0, edgeCount);
-
+    //std::cout << "initing weights\n";
+    List<double> weights = sample_binomial(5000, 0.5, edgeCount);//sample_bernulli(0.95, edgeCount);//ones_weights(edgeCount);///uniform_weights(1, 1000, edgeCount);
+    //std::cout << "weights size: " << edgeCount << " " << weights.size() << "\n\n\n";
     List<WNode> WGraph(m_graph.size());
     WGraph = to_rand_wgraph(m_graph, weights);
 
@@ -63,6 +63,7 @@ List<WNode> MonteCarloTrees::enrichmentGraph() {
     //         }
     //     }
     // }
+    //std::cout << "success\n";
     return WGraph;
 }
 
@@ -78,17 +79,17 @@ void MonteCarloTrees::makeTree() {
     catch (const std::exception& e) {
         static_cast<SpanningLogger*>(m_pLogger.get())->errSpanning(e.what(), m_numVertices, m_curDensity, "enrich");
     }
-    SizeType wastePrim = 0, wasteKruskal = 0;
+    unsigned int wastePrim = 0, wasteKruskal = 0;
     try {
         
-        m_spanner.primSpan(m_wgraph, wastePrim);
+        m_spanner.naivePrimSpan(m_wgraph, wastePrim);
         m_primSpanResults.push_back(wastePrim);                
     }
     catch (const std::exception& e) {
         static_cast<SpanningLogger*>(m_pLogger.get())->errSpanning(e.what(), m_numVertices, m_curDensity, "prim");
     }
     try {
-        m_spanner.kruskalSpan(m_wgraph, wasteKruskal); 
+        m_spanner.naiveKruskalSpan(m_wgraph, wasteKruskal); 
         m_kruskalSpanResults.push_back(wasteKruskal);
     }
     catch (const std::exception& e) {

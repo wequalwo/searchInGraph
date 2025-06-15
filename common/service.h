@@ -50,6 +50,6 @@ double sq(SizeType N);
  */
 EdgeType pair_from_index(SizeType index, SizeType n);
 
-unsigned int index_from_pair(SizeType graphSize, SizeType first, SizeType second);
+SizeType index_from_pair(SizeType graphSize, SizeType first, SizeType second);
 
 #endif //SERVICE_H
