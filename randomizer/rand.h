@@ -24,6 +24,14 @@ public:
         return dist(rng);
     }
 
+
+
+    double uniformRand(double min, double max)
+    {
+        std::uniform_real_distribution<double> dist(min, max);
+        return dist(rng);
+    }
+
     double randNorm(double mean, double dev)
     {
         std::normal_distribution<double> dist(mean, dev);
