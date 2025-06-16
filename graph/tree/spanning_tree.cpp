@@ -236,7 +236,7 @@ void Spanner::clearComps(List<Set<SizeType>*>& comps)
 
 
 //#################################### new version
-static constexpr SizeType WASTE_MULTIPLIER = 1000000; // 1 million
+//static constexpr SizeType WASTE_MULTIPLIER = 1000000; // 1 million
 
 List<WNode> Spanner::primSpan(const List<WNode>& graph, SizeType& waste)
 {

@@ -188,16 +188,24 @@ List<WNode> to_rand_wgraph(const List<Node>& graph)
     for (SizeType i = 0; i < graph.size(); ++i)
         wGraph.push_back(WNode(i, Map<SizeType, double>{}));
 
-    int n = 5000;
-    double p =  0.5;
-    std::mt19937 gen(1729);
 
-    //double weight = 0;
-    //std::binomial_distribution<> distr(n, p);
+    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::mt19937 gen(seed);
 
-    int weight = 0;
-    std::uniform_int_distribution<int> distr(1, 100);
+    double weight = 0;
+    int n = 5;
+    double pi =  0.999;
+    std::binomial_distribution<> distr(n, pi);
 
+    // int weight = 0;
+    // double n = 1
+    // double p = 100
+    // std::uniform_int_distribution<int> distr(n, p);
+
+    // double weight = 0;
+    // double mu = 0.0;
+    // double sigma = 1.0;
+    // std::normal_distribution<> distr(mu, sigma);
 
     // Присваиваем веса
     SizeType weightIdx = 0;
@@ -207,7 +215,7 @@ List<WNode> to_rand_wgraph(const List<Node>& graph)
         {
             if (i < j)
             {
-                weight = distr(gen);
+                weight = distr(gen); // 1; //const
                 wGraph[i].incident[j] = weight;
                 wGraph[j].incident[i] = weight;
             }

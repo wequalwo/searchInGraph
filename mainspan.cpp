@@ -62,7 +62,7 @@ int main() {
     List<double> dens = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
     std::string log = "logger/log", err = "logger/err";
     int i = 0;
-    MonteCarloTrees mc(5, 40, 5, dens, std::make_unique<TraversalLogger>(log, err, i));
+    MonteCarloTrees mc(5, 40, 5, dens, std::make_unique<SpanningLogger>(log, err, i));
     mc.initErdosRenyi();
     mc.runMonteCarlo();
 
