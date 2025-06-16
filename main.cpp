@@ -71,6 +71,14 @@ List<std::unique_ptr<MonteCarlo>> prepare_experiments(unsigned int g, unsigned i
         ++gs[i];
 
     List<std::unique_ptr<MonteCarlo>> res;
+    double theta1 = 0;
+    double theta2 = n;
+    if (expT == "-sp")
+    {   
+        std::cout << "Enter theta1 and theta2 distribution parameters: ";
+        std::cin >> theta1 >> theta2;
+        std::cout << '\n';
+    }
     for (unsigned int i = 0; i < j; ++i)
     {
         if (expT == "-col")
@@ -87,6 +95,14 @@ List<std::unique_ptr<MonteCarlo>> prepare_experiments(unsigned int g, unsigned i
         {
             res.push_back(std::make_unique<MonteCarloTrees>(
                               gs[i], n, s, d, std::make_unique<SpanningLogger>(log, err, i)));
+            try
+            {
+                dynamic_cast<MonteCarloTrees*>(res.back().get())->setParaps(theta1, theta2);
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
         }
     }
     for (auto& mc : res)
