@@ -44,26 +44,26 @@ List<WNode> toWeighted(const List<Node>& nodes, double defaultWeight = 1.0) {
 
 
 List<WNode> MonteCarloTrees::enrichmentGraph() {
-
     int edgeCount = 0;
     for (const auto& node : m_graph) {
         edgeCount += node.incident.size();
     }
     edgeCount /= 2;
-    //std::cout << "initing weights\n";
-    List<double> weights = sample_binomial(5000, 0.5, edgeCount);//sample_bernulli(0.95, edgeCount);//ones_weights(edgeCount);///uniform_weights(1, 1000, edgeCount);
-    //std::cout << "weights size: " << edgeCount << " " << weights.size() << "\n\n\n";
-    List<WNode> WGraph(m_graph.size());
-    WGraph = to_rand_wgraph(m_graph, weights);
+    std::cout << "initing weights\n";
+    //допустимые распределения:
+    //List<double> weights = sample_binomial(5000, 0.5, edgeCount);
+    //sample_binomial(5000, 0.5, edgeCount);
+    //sample_bernulli(0.95, edgeCount);
+    //ones_weights(edgeCount);
+    //uniform_weights(1, 1000, edgeCount);
 
-    // for (auto& node : WGraph) {
-    //     for (const auto& [v, w] : node.incident) {
-    //         if (node.data < v) {
-    //             std::cout << node.data << " -- " << v << " [weight=" << w << "]\n";
-    //         }
-    //     }
-    // }
-    //std::cout << "success\n";
+    
+    List<WNode> WGraph(m_graph.size());
+    //WGraph = to_rand_wgraph(m_graph, weights);
+
+    WGraph = to_rand_wgraph(m_graph); // перегруженная функция без весов (встроенная генерация)
+
+
     return WGraph;
 }
 
@@ -120,7 +120,7 @@ void MonteCarloTrees::runMonteCarlo() {
         avg = 0;
         for (int graphIndex = 0; graphIndex < m_numGraphs; ++graphIndex)
         {
-            buildGraph(curDensity);           
+            buildGraph(curDensity);     
             persearch = Clock::now();
             for (int trialIndex = 0; trialIndex < m_numRuns; ++trialIndex) {
 

@@ -88,15 +88,13 @@ List<double> sample_binomial(double p, int n, uint32_t count)
 {
     std::mt19937 gen(1729);
     std::binomial_distribution<> distr(n, p);
-    
+    std::cout << count <<"\n";
     List<double> res;
-    Randomizer rand;
     res.reserve(count);
 
     for (SizeType i = 0; i < count; ++i)
         res.push_back(distr(gen));
     return res;
 }
-
 
 #endif // GRAPH_RAND_WEIGHT_H

@@ -180,3 +180,43 @@ List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
 
     return wGraph;
 }
+
+List<WNode> to_rand_wgraph(const List<Node>& graph)
+{
+    int expected_num_edges = 0;
+    for (SizeType i = 0; i < graph.size(); ++i)
+    {
+        for (SizeType j : graph[i].incident)
+            if (i < j)
+                ++expected_num_edges;
+    }
+
+    // Создаем пустой взвешенный граф
+    List<WNode> wGraph;
+    for (SizeType i = 0; i < graph.size(); ++i)
+        wGraph.push_back(WNode(i, Map<SizeType, double>{}));
+
+
+    int n = 5000;
+    double p =  0.5;
+    std::mt19937 gen(1729);
+    double weight = 0;
+    std::binomial_distribution<> distr(n, p);
+
+    // Присваиваем веса
+    SizeType weightIdx = 0;
+    for (SizeType i = 0; i < graph.size(); ++i)
+    {
+        for (SizeType j : graph[i].incident)
+        {
+            if (i < j)
+            {
+                weight = distr(gen);
+                wGraph[i].incident[j] = weight;
+                wGraph[j].incident[i] = weight;
+            }
+        }
+    }
+
+    return wGraph;
+}
