@@ -16,6 +16,6 @@ List<Node> hilbert_graph(SizeType size, double pi, int& num_edges);
 // distribute weignts among edges in random order
 List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights);
 
-List<WNode> to_rand_wgraph(const List<Node>& graph); //built-in weights generator
+List<WNode> to_rand_wgraph(const List<Node>& graph, double theta1 = 0, double theta2 = 10); //built-in weights generator
 
 #endif // GRAPH_RAND_GRAPH_H

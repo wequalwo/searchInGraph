@@ -15,9 +15,12 @@ public:
     virtual void runMonteCarlo() override;
     virtual void clear() override;
 
+    void setParaps(double theta1, double theta2) { m_theta1 = theta1; m_theta2 = theta2; }
+
     // Геттеры для результатов
     const List<uint32_t>& getPrimSpanResults() const;
     const List<uint32_t>& getKruskalSpanResults() const;
+
 
 private:
 
@@ -28,6 +31,8 @@ private:
     Spanner m_spanner;
     void makeTree();
     List<WNode> enrichmentGraph();
+    double m_theta1 = 0; // параметры распределения вершин некоторого двупараметрического распределения P(theta1, theta2)
+    double m_theta2 = 10;
     void logResults() override;
 };
 

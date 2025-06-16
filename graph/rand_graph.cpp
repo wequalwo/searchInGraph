@@ -181,7 +181,7 @@ List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
     return wGraph;
 }
 
-List<WNode> to_rand_wgraph(const List<Node>& graph)
+List<WNode> to_rand_wgraph(const List<Node>& graph, double theta1, double theta2)
 {
     // Создаем пустой взвешенный граф
     List<WNode> wGraph;
@@ -192,10 +192,10 @@ List<WNode> to_rand_wgraph(const List<Node>& graph)
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937 gen(seed);
 
-    double weight = 0;
-    int n = 5;
-    double pi =  0.999;
-    std::binomial_distribution<> distr(n, pi);
+    // double weight = 0;
+    // int n = 100;
+    // double pi =  0.8;
+    // std::binomial_distribution<> distr(n, pi);
 
     // int weight = 0;
     // double n = 1
@@ -207,6 +207,11 @@ List<WNode> to_rand_wgraph(const List<Node>& graph)
     // double sigma = 1.0;
     // std::normal_distribution<> distr(mu, sigma);
 
+    int min_value = theta1;
+    int max_value = theta2;
+    
+    double weight = 0;
+    std::uniform_int_distribution<int> distr(min_value, max_value);
     // Присваиваем веса
     SizeType weightIdx = 0;
     for (SizeType i = 0; i < graph.size(); ++i)

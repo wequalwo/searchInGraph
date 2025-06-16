@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <queue> // see my functions below
 #include <limits>// see my functions below
-
+#include <cmath>
 #include "graph/tree/spanning_tree.h"
 
 List<WNode> Spanner::pSpan(const List<WNode>& graph) // Prim algorithm
@@ -35,11 +35,27 @@ List<WNode> Spanner::pSpan(const List<WNode>& graph) // Prim algorithm
     return res;
 } 
 
+
+// struct EdgeComparator {
+//     const Map<EdgeType, double>& weights;
+//     int count = 0;
+
+//     EdgeComparator(const Map<EdgeType, double>& w) : weights(w) {}
+
+//     bool operator()(const EdgeType& left, const EdgeType& right) {
+//         ++count;
+//         return weights.at(left) < weights.at(right);
+//     }
+// };
+
+
+
 List<WNode> Spanner::naiveKruskalSpan(const List<WNode>& graph, unsigned int& waste) // Kruskal algorithm
 {
     waste = 0;
     List<EdgeType> edges;
     Map<EdgeType, double> weights;
+
 
     for (const auto& node : graph)
         for (const auto adjV : node.incident)
@@ -50,9 +66,22 @@ List<WNode> Spanner::naiveKruskalSpan(const List<WNode>& graph, unsigned int& wa
                 edges.push_back(std::move(edge));
             }
     
+
+    auto comp = [&weights, &waste](const EdgeType& left, const EdgeType& right) 
+        {
+            //++waste;
+            return weights.at(left) < weights.at(right);
+        };
+
     // sort edges according to their weights
-    std::sort(edges.begin(), edges.end(), [&weights](EdgeType left, EdgeType right)
-                                              { return weights[left] < weights[right]; });
+    // it costs O(n log n) avarage, so ve cat add it here
+    // waste+=int(edges.size()*log(edges.size()));
+
+    // std::sort(edges.begin(), edges.end(), [&weights](EdgeType left, EdgeType right)
+    //                                           { return weights[left] < weights[right]; });
+
+    std::sort(edges.begin(), edges.end(), comp);
+    
 
     // use pointers for fast comparison
     List<Set<SizeType>*> comps;
@@ -67,7 +96,7 @@ List<WNode> Spanner::naiveKruskalSpan(const List<WNode>& graph, unsigned int& wa
     for (const auto& edge : edges)
     {
         // if vertices are in different components
-        waste++;
+        waste+=1;
         if (comps[edge.first] != comps[edge.second])
         {
             mergeComps(comps, edge.first, edge.second, waste);

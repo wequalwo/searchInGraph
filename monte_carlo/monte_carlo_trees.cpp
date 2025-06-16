@@ -62,7 +62,7 @@ List<WNode> MonteCarloTrees::enrichmentGraph() {
     List<WNode> WGraph(m_graph.size());
     //WGraph = to_rand_wgraph(m_graph, weights); // use with caution: bad_alloc exception may occur if p > 500
 
-    WGraph = to_rand_wgraph(m_graph); // overloaded function without weights (built-in generation)
+    WGraph = to_rand_wgraph(m_graph, m_theta1, m_theta2); // overloaded function without weights (built-in generation)
     return WGraph;
 }
 
