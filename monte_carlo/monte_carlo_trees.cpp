@@ -44,13 +44,14 @@ List<WNode> toWeighted(const List<Node>& nodes, double defaultWeight = 1.0) {
 
 
 List<WNode> MonteCarloTrees::enrichmentGraph() {
-    int edgeCount = 0;
-    for (const auto& node : m_graph) {
-        edgeCount += node.incident.size();
-    }
-    edgeCount /= 2;
-    std::cout << "initing weights\n";
-    //допустимые распределения:
+    
+    // int edgeCount = 0;
+    // for (const auto& node : m_graph) {
+    //     edgeCount += node.incident.size();
+    // }
+    // edgeCount /= 2;
+    // std::cout << "initing weights\n";
+    //admissible distributions:
     //List<double> weights = sample_binomial(5000, 0.5, edgeCount);
     //sample_binomial(5000, 0.5, edgeCount);
     //sample_bernulli(0.95, edgeCount);
@@ -59,15 +60,13 @@ List<WNode> MonteCarloTrees::enrichmentGraph() {
 
     
     List<WNode> WGraph(m_graph.size());
-    //WGraph = to_rand_wgraph(m_graph, weights);
+    //WGraph = to_rand_wgraph(m_graph, weights); // use with caution: bad_alloc exception may occur if p > 500
 
-    WGraph = to_rand_wgraph(m_graph); // перегруженная функция без весов (встроенная генерация)
-
-
+    WGraph = to_rand_wgraph(m_graph); // overloaded function without weights (built-in generation)
     return WGraph;
 }
 
-// Логирование результатов
+// logging results
 void MonteCarloTrees::logResults() {
     static_cast<SpanningLogger*>(m_pLogger.get())->log(m_wgraph.size(), m_curDensity, getKruskalSpanResults().back(), getPrimSpanResults().back());
 }
@@ -124,12 +123,11 @@ void MonteCarloTrees::runMonteCarlo() {
             persearch = Clock::now();
             for (int trialIndex = 0; trialIndex < m_numRuns; ++trialIndex) {
 
-                makeTree(); // здесь зашито обогащение графа весами!
-
+                makeTree();
                 logResults();
             }
             avg += std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - persearch).count();
-            if ((graphIndex + 1) % 100 == 0) {
+            if ((graphIndex + 1) % 10 == 0) {
                 std::cerr << graphIndex + 1 << " graphs processed\n";
                 std::cerr << "Avg span time per " << m_numRuns << "trials = " << avg / (100) << "[mcs] = " << avg / (100) / 1'000'000.0 << " sec" << '\n';
                 std::cerr << "dt from start = " << std::chrono::duration_cast<std::chrono::microseconds>(Clock::now() - begin).count() << "[mcs] = "

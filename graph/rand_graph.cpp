@@ -86,8 +86,8 @@ List<Node> hilbert_graph(SizeType size, double pi, int& num_edges)
                 graph[j].incident.insert(i);
                 ++num_edges;
             }
-    std::cout << "number of edges: " << num_edges << '\n';
-    std::cout << "density: " << double(num_edges) / (size * (size - 1) / 2) << '\n';
+    //std::cout << "number of edges: " << num_edges << '\n';
+    //std::cout << "density: " << double(num_edges) / (size * (size - 1) / 2) << '\n';
     return graph;
 }
 
@@ -183,25 +183,21 @@ List<WNode> to_rand_wgraph(const List<Node>& graph, const List<double>& weights)
 
 List<WNode> to_rand_wgraph(const List<Node>& graph)
 {
-    int expected_num_edges = 0;
-    for (SizeType i = 0; i < graph.size(); ++i)
-    {
-        for (SizeType j : graph[i].incident)
-            if (i < j)
-                ++expected_num_edges;
-    }
-
     // Создаем пустой взвешенный граф
     List<WNode> wGraph;
     for (SizeType i = 0; i < graph.size(); ++i)
         wGraph.push_back(WNode(i, Map<SizeType, double>{}));
 
-
     int n = 5000;
     double p =  0.5;
     std::mt19937 gen(1729);
-    double weight = 0;
-    std::binomial_distribution<> distr(n, p);
+
+    //double weight = 0;
+    //std::binomial_distribution<> distr(n, p);
+
+    int weight = 0;
+    std::uniform_int_distribution<int> distr(1, 100);
+
 
     // Присваиваем веса
     SizeType weightIdx = 0;
