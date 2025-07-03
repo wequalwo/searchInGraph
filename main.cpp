@@ -6,6 +6,7 @@
 #include "monte_carlo/monte_carlo_traversal.h"
 #include "monte_carlo/monte_carlo_trees.h"
 #include "monte_carlo/monte_carlo_colorer.h"
+#include "monte_carlo/monte_carlo_degs.h"
 
 void print_usage(const std::string& path)
 {
@@ -17,6 +18,7 @@ void print_usage(const std::string& path)
     std::cerr << "-col: run coloring experiment\n";
     std::cerr << "-sp: run spanning trees experiment\n";
     std::cerr << "-tr: run traversal experiment\n";
+    std::cerr << "-deg: run counting degrees experiment\n";
     std::cerr << "-h: select Hilbert model for experiment with independent probabilities\n";
     std::cerr << "-er: select Erdos-Renyi model for experiment with fixed number of edges\n";
     std::cerr << "<di> = densities in (0, 1] for Hilbert/Erdos-Renyi experiment\n";
@@ -53,7 +55,7 @@ bool check_graph_exp_types(const std::string& gr, const std::string& exp)
 {
     if (!(gr == "-er" || gr == "-h"))
         return false;
-    if (!(exp == "-col" || exp == "-sp" || exp == "-tr"))
+    if (!(exp == "-col" || exp == "-sp" || exp == "-tr" || exp == "-deg"))
         return false;
     return true;
 }
@@ -91,7 +93,7 @@ List<std::unique_ptr<MonteCarlo>> prepare_experiments(unsigned int g, unsigned i
             res.push_back(std::make_unique<MonteCarloTraversal>(
                               gs[i], n, s, d, std::make_unique<TraversalLogger>(log, err, i)));
         }
-        else // if (m == "-sp") // <= checked before
+        else if (expT == "-sp")
         {
             res.push_back(std::make_unique<MonteCarloTrees>(
                               gs[i], n, s, d, std::make_unique<SpanningLogger>(log, err, i)));
@@ -104,11 +106,16 @@ List<std::unique_ptr<MonteCarlo>> prepare_experiments(unsigned int g, unsigned i
                 std::cerr << e.what() << '\n';
             }
         }
+        else if (expT == "-deg")
+        {
+            res.push_back(std::make_unique<MonteCarloDegs>(
+                              gs[i], n, s, d, std::make_unique<DegreeLogger>(log, err, i)));
+        }
     }
     for (auto& mc : res)
         if (grT == "-h")
             mc->initHilbert();
-        else // if (grT == "-er")
+        else if (grT == "-er")
             mc->initErdosRenyi();
     return res;
 }

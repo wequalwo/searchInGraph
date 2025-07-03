@@ -1,8 +1,8 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -g -march=native
 INCLUDES = -I.
-SRC_COMMON = logger/logger.cpp logger/coloring_logger.cpp logger/spanning_logger.cpp logger/traversal_logger.cpp \
-             monte_carlo/monte_carlo.cpp monte_carlo/monte_carlo_colorer.cpp monte_carlo/monte_carlo_traversal.cpp monte_carlo/monte_carlo_trees.cpp \
+SRC_COMMON = logger/logger.cpp logger/coloring_logger.cpp logger/spanning_logger.cpp logger/traversal_logger.cpp logger/degree_logger.cpp \
+             monte_carlo/monte_carlo.cpp monte_carlo/monte_carlo_colorer.cpp monte_carlo/monte_carlo_traversal.cpp monte_carlo/monte_carlo_trees.cpp monte_carlo/monte_carlo_degs.cpp \
 			 common/service.cpp \
 			 graph/rand_graph.cpp graph/edge.cpp \
              graph/traversal/traversal.cpp \
