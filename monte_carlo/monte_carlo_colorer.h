@@ -9,7 +9,7 @@ class MonteCarloColorer : public MonteCarlo
 {
 public:
     MonteCarloColorer(int numGraphs, int numVertices, int numRuns, const List<double>& densities, std::unique_ptr<ColoringLogger>&& pLogger)
-        : MonteCarlo(numGraphs, numVertices,numRuns,  densities, std::move(pLogger))
+        : MonteCarlo(numGraphs, numVertices, numRuns, densities, std::move(pLogger))
     {}
 
     MonteCarloColorer(const MonteCarloColorer& other) = delete;
